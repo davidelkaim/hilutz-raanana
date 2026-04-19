@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>יחידת חילוץ רעננה</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --or: #E8650A;
+    --or2: #c4530a;
+    --or3: #ff8c3a;
+    --orlt: rgba(232,101,10,0.12);
+    --dk: #0f0f0f;
+    --dk2: #161616;
+    --dk3: #202020;
+    --dk4: #2a2a2a;
+    --dk5: #333333;
+    --tx: #ffffff;
+    --tx2: rgba(255,255,255,0.6);
+    --tx3: rgba(255,255,255,0.3);
+    --bd: rgba(255,255,255,0.07);
+    --bd2: rgba(255,255,255,0.14);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', Arial, 'Helvetica Neue', sans-serif;
+    background: var(--dk);
+    color: var(--tx);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: fixed;
+    top: 0; right: 0; left: 0;
+    z-index: 1000;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232,101,10,0.25);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-unit {
+    width: 40px; height: 40px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #222;
+    flex-shrink: 0;
+  }
+  .logo-unit img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .nav-sep { width: 1px; height: 32px; background: var(--bd2); }
+  .city-logo {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 2px;
+  }
+  .city-shield {
+    width: 28px; height: 28px;
+    background: var(--or);
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .city-shield svg { width: 15px; height: 15px; fill: white; }
+  .city-label { font-size: 9px; color: var(--tx3); letter-spacing: .04em; }
+  .unit-text { line-height: 1.25; }
+  .unit-name { font-size: 14px; font-weight: 700; color: white; }
+  .unit-sub { font-size: 10px; color: var(--tx3); }
+  .nav-links {
+    display: flex;
+    gap: 0;
+  }
+  .nav-link {
+    padding: 0 14px;
+    height: 62px;
+    display: flex; align-items: center;
+    font-size: 13px;
+    color: var(--tx2);
+    cursor: pointer;
+    border: none; background: none;
+    font-family: inherit;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .nav-link:hover { color: white; }
+  .nav-link.active { color: var(--or); border-bottom-color: var(--or); font-weight: 600; }
+  .nav-social { display: flex; gap: 8px; }
+  .nsoc {
+    width: 30px; height: 30px;
+    border-radius: 4px;
+    border: 1px solid var(--bd2);
+    background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .nsoc:hover { background: var(--or); border-color: var(--or); }
+  .nsoc svg { width: 14px; height: 14px; fill: rgba(255,255,255,.65); }
+  .nsoc:hover svg { fill: white; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; padding-top: 62px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ===== HOME: HERO ===== */
+  .hero {
+    position: relative;
+    height: calc(100vh - 62px);
+    min-height: 500px;
+    max-height: 780px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: #0a0a0a;
+  }
+  .hero-bg img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: .42;
+    transition: opacity .4s;
+  }
+  .hero-grad {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      105deg,
+      rgba(232,101,10,0.08) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.92) 0%,
+      rgba(0,0,0,.4) 50%,
+      rgba(0,0,0,.1) 100%
+    );
+  }
+  .hero-stripe {
+    position: absolute; top: 0; right: 0;
+    width: 5px; height: 100%;
+    background: var(--or);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 56px 56px;
+    max-width: 700px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--or);
+    color: white;
+    font-size: 11px; font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 22px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+  .hero-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: white;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+  .hero h1 {
+    font-size: 46px;
+    font-weight: 900;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 18px;
+    letter-spacing: -.02em;
+  }
+  .hero h1 em { color: var(--or); font-style: normal; }
+  .hero-desc {
+    font-size: 16px;
+    color: rgba(255,255,255,.65);
+    line-height: 1.75;
+    margin-bottom: 32px;
+    max-width: 520px;
+  }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-or {
+    padding: 13px 30px;
+    background: var(--or); color: white;
+    border: none; border-radius: 3px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    letter-spacing: .03em;
+    transition: background .2s;
+  }
+  .btn-or:hover { background: var(--or2); }
+  .btn-ghost {
+    padding: 12px 28px;
+    background: transparent; color: white;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 3px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-ghost:hover { border-color: white; background: rgba(255,255,255,.07); }
+
+  /* ===== HOME: STATS BAR ===== */
+  .stats-bar {
+    display: flex;
+    background: rgba(12,12,12,.97);
+    border-top: 1px solid var(--or);
+  }
+  .stat-item {
+    flex: 1;
+    padding: 20px 16px;
+    text-align: center;
+    border-left: 1px solid var(--bd);
+  }
+  .stat-item:last-child { border-left: none; }
+  .stat-n { font-size: 30px; font-weight: 900; color: var(--or); line-height: 1; }
+  .stat-l { font-size: 11px; color: var(--tx3); margin-top: 4px; letter-spacing: .04em; }
+
+  /* ===== HOME: TICKER ===== */
+  .ticker {
+    background: var(--or);
+    padding: 11px 32px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .ticker-tag {
+    font-size: 11px; font-weight: 800;
+    background: rgba(0,0,0,.22);
+    color: white;
+    padding: 3px 10px; border-radius: 2px;
+    letter-spacing: .05em;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .ticker-text { font-size: 13px; color: white; font-weight: 500; }
+  .ticker-date { font-size: 11px; color: rgba(255,255,255,.7); margin-right: auto; white-space: nowrap; }
+
+  /* ===== HOME: SECTIONS ===== */
+  .home-sec { padding: 64px 56px; }
+  .sec-label {
+    font-size: 11px; font-weight: 700; color: var(--or);
+    letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .sec-title {
+    font-size: 32px; font-weight: 900; color: white;
+    margin-bottom: 40px; line-height: 1.15;
+  }
+
+  /* Activity grid */
+  .act-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--dk4);
+  }
+  .act-card { background: var(--dk2); overflow: hidden; cursor: pointer; position: relative; }
+  .act-thumb {
+    height: 220px; overflow: hidden; position: relative;
+  }
+  .act-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(.65);
+    transition: transform .5s, filter .3s;
+  }
+  .act-card:hover .act-thumb img { transform: scale(1.05); filter: brightness(.55); }
+  .act-or-bar {
+    position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: var(--or);
+    transform: scaleY(0); transform-origin: top;
+    transition: transform .3s;
+  }
+  .act-card:hover .act-or-bar { transform: scaleY(1); }
+  .act-body { padding: 22px 24px; }
+  .act-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; }
+  .act-desc { font-size: 13px; color: var(--tx2); line-height: 1.65; }
+  .act-more {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--or); font-weight: 700;
+    margin-top: 14px; letter-spacing: .03em;
+    text-transform: uppercase;
+  }
+
+  /* Dept strip */
+  .dept-strip {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--dk4);
+  }
+  .dept-cell {
+    background: var(--dk3); padding: 32px 28px; text-align: center;
+    border-top: 3px solid transparent;
+    transition: border-color .2s;
+  }
+  .dept-cell:hover { border-top-color: var(--or); }
+  .dept-big { font-size: 52px; font-weight: 900; color: var(--or); line-height: 1; }
+  .dept-name { font-size: 16px; font-weight: 800; color: white; margin: 10px 0 6px; }
+  .dept-desc { font-size: 13px; color: var(--tx2); line-height: 1.6; }
+
+  /* Emergency bar */
+  .emer-bar {
+    background: var(--or);
+    padding: 36px 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .emer-bar h3 { font-size: 22px; font-weight: 900; color: white; margin-bottom: 5px; }
+  .emer-bar p { font-size: 14px; color: rgba(255,255,255,.8); }
+  .emer-phone {
+    font-size: 34px; font-weight: 900; color: white;
+    letter-spacing: .02em; white-space: nowrap;
+    direction: ltr;
+  }
+
+  /* Footer */
+  .footer {
+    background: #080808;
+    padding: 28px 56px;
+    border-top: 1px solid var(--bd);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-copy { font-size: 12px; color: var(--tx3); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-link { font-size: 12px; color: var(--tx3); cursor: pointer; text-decoration: none; }
+  .footer-link:hover { color: var(--or); }
+
+  /* ===== ADMIN ===== */
+  .admin-header {
+    background: var(--or);
+    padding: 18px 40px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .admin-header svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
+  .admin-header-text strong { display: block; font-size: 17px; font-weight: 800; color: white; }
+  .admin-header-text span { font-size: 12px; color: rgba(255,255,255,.8); }
+
+  .admin-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--bd);
+    padding: 0 40px;
+    background: var(--dk2);
+  }
+  .atab {
+    padding: 14px 20px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    border: none; background: none;
+    font-family: inherit;
+    color: var(--tx2);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all .2s;
+  }
+  .atab:hover { color: white; }
+  .atab.active { color: var(--or); border-bottom-color: var(--or); }
+
+  .admin-body { padding: 32px 40px; background: var(--dk2); min-height: calc(100vh - 200px); }
+  .asec { display: none; }
+  .asec.active { display: block; }
+
+  /* Admin toolbar */
+  .admin-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .admin-toolbar h2 { font-size: 18px; font-weight: 800; color: white; }
+  .abtn {
+    padding: 9px 18px;
+    background: var(--or); color: white;
+    border: none; border-radius: 3px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: background .2s;
+  }
+  .abtn:hover { background: var(--or2); }
+  .abtn-ghost {
+    background: transparent; color: var(--tx2);
+    border: 1px solid var(--bd2);
+  }
+  .abtn-ghost:hover { border-color: var(--or); color: white; background: transparent; }
+
+  /* Search / filters */
+  .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .finput {
+    padding: 9px 14px;
+    background: var(--dk3); color: white;
+    border: 1px solid var(--bd); border-radius: 3px;
+    font-family: inherit; font-size: 13px;
+  }
+  .finput:focus { outline: none; border-color: var(--or); }
+  .fsel {
+    padding: 9px 14px;
+    background: var(--dk3); color: white;
+    border: 1px solid var(--bd); border-radius: 3px;
+    font-family: inherit; font-size: 13px; cursor: pointer;
+  }
+
+  /* Events */
+  .ev-list { display: flex; flex-direction: column; gap: 12px; }
+  .ev-card {
+    background: var(--dk3);
+    border: 1px solid var(--bd);
+    border-right: 3px solid var(--bd);
+    border-radius: 3px;
+    padding: 20px 22px;
+    transition: border-right-color .2s;
+  }
+  .ev-card.ev-active { border-right-color: var(--or); }
+  .ev-card:hover { border-right-color: var(--or3); }
+  .ev-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .ev-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 4px; }
+  .ev-date { font-size: 12px; color: var(--tx3); }
+  .ev-badge {
+    font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 2px;
+    letter-spacing: .04em; text-transform: uppercase;
+  }
+  .eb-done { background: rgba(255,255,255,.07); color: var(--tx2); }
+  .eb-plan { background: rgba(232,101,10,.15); color: var(--or); }
+  .eb-open { background: rgba(99,153,34,.15); color: #acd36a; }
+  .ev-stats { display: flex; gap: 24px; margin-bottom: 14px; }
+  .ev-stat { font-size: 13px; color: var(--tx3); }
+  .ev-stat strong { color: white; font-weight: 700; }
+  .ev-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip {
+    font-size: 12px; font-weight: 600;
+    padding: 4px 12px; border-radius: 2px;
+  }
+  .chip-r { background: rgba(232,101,10,.15); color: var(--or3); }
+  .chip-l { background: rgba(186,117,23,.15); color: #EF9F27; }
+  .chip-c { background: var(--bd); color: var(--tx2); }
+  .ev-actions { display: flex; gap: 8px; padding-top: 14px; border-top: 1px solid var(--bd); }
+  .ev-btn {
+    padding: 7px 16px;
+    border-radius: 3px; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: inherit; border: none;
+    background: var(--or); color: white;
+    transition: background .2s;
+  }
+  .ev-btn:hover { background: var(--or2); }
+  .ev-btn-ghost {
+    background: transparent; color: var(--tx2);
+    border: 1px solid var(--bd2);
+  }
+  .ev-btn-ghost:hover { border-color: var(--or); color: white; }
+
+  /* New event form */
+  .new-ev-form {
+    background: var(--dk4);
+    border: 1px solid var(--bd);
+    border-right: 3px solid var(--or);
+    border-radius: 3px;
+    padding: 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .new-ev-form.visible { display: block; }
+  .nef-title { font-size: 15px; font-weight: 800; color: white; margin-bottom: 18px; }
+  .nef-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .nef-full { margin-bottom: 14px; }
+  .nef-label { display: block; font-size: 11px; font-weight: 700; color: var(--tx3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 5px; }
+  .nef-input {
+    width: 100%; padding: 9px 13px;
+    background: var(--dk2); color: white;
+    border: 1px solid var(--bd); border-radius: 3px;
+    font-family: inherit; font-size: 13px;
+  }
+  .nef-input:focus { outline: none; border-color: var(--or); }
+  .cb-group { display: flex; gap: 14px; flex-wrap: wrap; }
+  .cb-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--tx2); cursor: pointer; }
+  .cb-item input { accent-color: var(--or); width: 15px; height: 15px; }
+  .nef-footer { display: flex; gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--bd); }
+
+  /* Attendance modal overlay */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.75);
+    z-index: 2000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 80px 20px 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: var(--dk2);
+    border: 1px solid var(--bd2);
+    border-top: 3px solid var(--or);
+    border-radius: 4px;
+    width: 100%; max-width: 860px;
+    padding: 28px 32px;
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .modal-title { font-size: 18px; font-weight: 800; color: white; }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 3px;
+    background: var(--dk3); border: 1px solid var(--bd);
+    color: var(--tx2); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  .modal-close:hover { border-color: var(--or); color: white; }
+  .modal-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--bd); margin-bottom: 20px; }
+  .mtab {
+    padding: 10px 18px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; background: none;
+    font-family: inherit; color: var(--tx2);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all .2s;
+  }
+  .mtab.active { color: var(--or); border-bottom-color: var(--or); }
+  .msec { display: none; }
+  .msec.active { display: block; }
+
+  /* Attendance list */
+  .att-stats { display: flex; gap: 16px; margin-bottom: 20px; }
+  .att-stat { background: var(--dk3); border-radius: 3px; padding: 12px 18px; text-align: center; flex: 1; }
+  .att-stat-n { font-size: 24px; font-weight: 900; color: var(--or); }
+  .att-stat-l { font-size: 11px; color: var(--tx3); margin-top: 2px; }
+  .att-list { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; }
+  .att-item {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--dk3); border: 1px solid var(--bd);
+    border-radius: 3px; padding: 11px 14px;
+    transition: border-color .2s;
+  }
+  .att-item:hover { border-color: var(--bd2); }
+  .att-av {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--or); color: white;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .att-name { font-size: 14px; font-weight: 700; color: white; flex: 1; }
+  .att-role { font-size: 11px; color: var(--tx3); }
+  .att-dept { font-size: 11px; color: var(--tx3); min-width: 90px; }
+  .att-toggle {
+    display: flex; gap: 0;
+    border: 1px solid var(--bd2); border-radius: 3px; overflow: hidden;
+  }
+  .att-btn {
+    padding: 5px 12px; font-size: 12px; font-weight: 700;
+    cursor: pointer; border: none; font-family: inherit;
+    background: var(--dk2); color: var(--tx2);
+    transition: all .15s;
+  }
+  .att-btn.present { background: rgba(99,153,34,.2); color: #acd36a; }
+  .att-btn.absent { background: rgba(232,101,10,.15); color: var(--or); }
+
+  /* Teams builder */
+  .teams-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .team-card {
+    background: var(--dk3); border: 1px solid var(--bd); border-radius: 3px; padding: 16px;
+  }
+  .team-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .team-card-title { font-size: 14px; font-weight: 800; color: white; }
+  .team-members { display: flex; flex-direction: column; gap: 6px; }
+  .team-member {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--dk2); border-radius: 3px; padding: 8px 10px;
+    font-size: 13px; color: var(--tx2);
+  }
+  .tm-av {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--or); color: white; font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .tm-role { font-size: 11px; color: var(--tx3); margin-right: auto; }
+  .add-member-btn {
+    width: 100%; margin-top: 8px; padding: 7px;
+    background: var(--orlt); color: var(--or);
+    border: 1px dashed rgba(232,101,10,.4); border-radius: 3px;
+    font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: all .2s;
+  }
+  .add-member-btn:hover { background: rgba(232,101,10,.2); }
+
+  /* Members table */
+  .mtable-wrap { overflow-x: auto; }
+  .mtable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .mtable th {
+    padding: 11px 14px;
+    text-align: right;
+    font-size: 11px; font-weight: 700; color: var(--tx3);
+    letter-spacing: .05em; text-transform: uppercase;
+    background: var(--dk3);
+    border-bottom: 1px solid var(--bd);
+    white-space: nowrap;
+  }
+  .mtable td {
+    padding: 11px 14px;
+    font-size: 13px; color: white;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    vertical-align: middle;
+  }
+  .mtable tr:last-child td { border-bottom: none; }
+  .mtable tr:hover td { background: rgba(255,255,255,.025); }
+  .rbg { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 2px; font-weight: 700; }
+  .r-cmd { background: rgba(232,101,10,.2); color: var(--or); }
+  .r-dep { background: rgba(232,101,10,.1); color: var(--or3); }
+  .r-tm  { background: rgba(24,95,165,.2); color: #85B7EB; }
+  .r-rg  { background: rgba(255,255,255,.08); color: var(--tx2); }
+  .dbg { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 2px; background: rgba(255,255,255,.07); color: var(--tx2); font-weight: 600; }
+  .sbg { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 2px; font-weight: 700; }
+  .s-on  { background: rgba(99,153,34,.15); color: #acd36a; }
+  .s-off { background: rgba(186,117,23,.15); color: #EF9F27; }
+  .ibtn {
+    width: 28px; height: 28px; border-radius: 3px;
+    border: 1px solid var(--bd); background: none;
+    cursor: pointer; font-size: 13px; color: var(--tx3);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  .ibtn:hover { border-color: var(--or); color: var(--or); background: rgba(232,101,10,.07); }
+
+  /* Equipment */
+  .eq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .eq-card {
+    background: var(--dk3); border: 1px solid var(--bd);
+    border-radius: 3px; padding: 18px;
+    transition: border-color .2s;
+  }
+  .eq-card:hover { border-color: var(--bd2); }
+  .eq-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+  .eq-name { font-size: 15px; font-weight: 800; color: white; }
+  .eq-grp {
+    font-size: 10px; font-weight: 700; color: var(--or);
+    background: var(--orlt); padding: 3px 8px; border-radius: 2px;
+    letter-spacing: .04em;
+  }
+  .eq-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tx2); margin-bottom: 10px; }
+  .sdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .dot-g { background: #639922; }
+  .dot-a { background: #BA7517; }
+  .dot-r { background: var(--or); }
+  .eq-last { font-size: 11px; color: var(--tx3); }
+  .eq-event { font-size: 11px; color: var(--or3); margin-top: 3px; }
+
+  /* Add member modal */
+  .modal-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .mfg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .mfl { font-size: 11px; font-weight: 700; color: var(--tx3); letter-spacing: .04em; text-transform: uppercase; }
+  .mfi {
+    padding: 9px 13px; background: var(--dk3); color: white;
+    border: 1px solid var(--bd); border-radius: 3px;
+    font-family: inherit; font-size: 13px;
+  }
+  .mfi:focus { outline: none; border-color: var(--or); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--dk2); }
+  ::-webkit-scrollbar-thumb { background: var(--dk5); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--or); }
+</style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="logo-unit">
+      <img src="https://tse4.mm.bing.net/th/id/OIP.EfMk8wlbRKB3hhio8TDiAgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
+           alt="לוגו יחידת חילוץ רעננה"
+           onerror="this.style.display='none'">
+    </div>
+    <div class="nav-sep"></div>
+    <div class="city-logo">
+      <div class="city-shield">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
+      <div class="city-label">עיריית רעננה</div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="unit-text">
+      <div class="unit-name">יחידת חילוץ רעננה</div>
+      <div class="unit-sub">מערכת ניהול פנימית</div>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home')">בית</button>
+    <button class="nav-link" onclick="showPage('admin')">ניהול</button>
+    <button class="nav-link" onclick="showPage('home')">הכשרה</button>
+    <button class="nav-link" onclick="showPage('home')">ארכיון</button>
+    <button class="nav-link" onclick="showPage('home')">עיתונות</button>
+    <button class="nav-link" onclick="showPage('home')">אודות</button>
+    <button class="nav-link" onclick="showPage('home')">התנדבות</button>
+    <button class="nav-link" onclick="showPage('home')">צור קשר</button>
+  </div>
+
+  <div class="nav-social">
+    <a class="nsoc" href="https://www.instagram.com/" target="_blank" title="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a class="nsoc" href="https://www.facebook.com/" target="_blank" title="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ====== HOME ====== -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg">
+      <img
+        src="https://www.tzomet-ran.co.il/wp-content/uploads/2017/09/TR-H-C-%D7%AA%D7%A8%D7%92%D7%99%D7%9C-%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%97%D7%99%D7%9C%D7%95%D7%A5-%D7%A6%D7%99-768x509.jpg"
+        alt="תרגיל חילוץ יחידת רעננה"
+        onerror="this.src='https://fra1.digitaloceanspaces.com/inhasharon.co.il/2019/02/%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%9E%D7%AA%D7%A0%D7%93%D7%91%D7%99%D7%9D-2.jpg'; this.onerror=null;">
+    </div>
+    <div class="hero-grad"></div>
+    <div class="hero-stripe"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-dot"></span>
+        יחידת חילוץ עירונית · רעננה
+      </div>
+      <h1>מוכנות לכל שעה.<br><em>חילוץ בכל תרחיש.</em></h1>
+      <p class="hero-desc">
+        מתנדבים מקצועיים המוכנים לפעול בכל אירוע חירום —
+        מרעידת אדמה ועד פגיעת טיל. אנחנו כאן כדי להציל חיים.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-or" onclick="showPage('admin')">כניסה לניהול</button>
+        <button class="btn-ghost">אודות היחידה</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-n">48+</div>
+      <div class="stat-l">מתנדבים פעילים</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">3</div>
+      <div class="stat-l">קבוצות חילוץ</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">24/7</div>
+      <div class="stat-l">מוכנות מבצעית</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">12+</div>
+      <div class="stat-l">תרגילים בשנה</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">9</div>
+      <div class="stat-l">כלי ציוד מבצעיים</div>
+    </div>
+  </div>
+
+  <!-- Ticker -->
+  <div class="ticker">
+    <span class="ticker-tag">עדכון אחרון</span>
+    <span class="ticker-text">תרגיל ינואר 2025 הסתיים בהצלחה — 34 מתנדבים, 3 קבוצות, 6 תרחישים שונים</span>
+    <span class="ticker-date">ינואר 2025</span>
+  </div>
+
+  <!-- Activity -->
+  <div class="home-sec" style="background: #141414; padding-bottom: 0;">
+    <div class="sec-label">פעילות היחידה</div>
+    <div class="sec-title">תחומי ההתמחות שלנו</div>
+    <div class="act-grid">
+      <div class="act-card">
+        <div class="act-thumb">
+          <img src="https://fra1.digitaloceanspaces.com/inhasharon.co.il/2019/02/%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%9E%D7%AA%D7%A0%D7%93%D7%91%D7%99%D7%9D-2.jpg"
+               alt="חילוץ מהריסות"
+               onerror="this.style.display='none'; this.parentElement.style.background='#1e1e1e'">
+          <div class="act-or-bar"></div>
+        </div>
+        <div class="act-body">
+          <div class="act-title">חילוץ מהריסות</div>
+          <div class="act-desc">איתור וחילוץ נפגעים מתחת להריסות מבנים בעקבות רעידות אדמה ופגיעות טילים. עבודה שיטתית ומקצועית להצלת חיים.</div>
+          <div class="act-more">קרא עוד ←</div>
+        </div>
+      </div>
+      <div class="act-card">
+        <div class="act-thumb">
+          <img src="https://hitnadvut.kfar-saba.muni.il/wp-content/uploads/2020/09/image007.jpg"
+               alt="ניהול אוכלוסייה"
+               onerror="this.style.display='none'; this.parentElement.style.background='#1e1e1e'">
+          <div class="act-or-bar"></div>
+        </div>
+        <div class="act-body">
+          <div class="act-title">ניהול אוכלוסייה ולוגיסטיקה</div>
+          <div class="act-desc">פינוי ותמיכה לתושבים באזורי אסון, ניהול ציוד מבצעי, ותיאום מלא עם כל גורמי החירום העירוניים.</div>
+          <div class="act-more">קרא עוד ←</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Depts -->
+  <div class="dept-strip">
+    <div class="dept-cell">
+      <div class="dept-big">3</div>
+      <div class="dept-name">קבוצות מחלצים</div>
+      <div class="dept-desc">כל קבוצה עם נגרר א׳, נגרר ב׳ ומערכת תאורה</div>
+    </div>
+    <div class="dept-cell">
+      <div class="dept-big">1</div>
+      <div class="dept-name">חפ"ק לוגיסטיקה</div>
+      <div class="dept-desc">ניהול ציוד, אספקה ותיאום שטח מלא</div>
+    </div>
+    <div class="dept-cell">
+      <div class="dept-big">+</div>
+      <div class="dept-name">אוכלוסייה</div>
+      <div class="dept-desc">ניהול אזרחים ופינוי בזמן אירוע חירום</div>
+    </div>
+  </div>
+
+  <!-- Emergency bar -->
+  <div class="emer-bar">
+    <div>
+      <h3>מרכז חירום — זמין 24/7</h3>
+      <p>למקרי חירום בלבד — התקשרות ישירה למפקד הכוננות</p>
+    </div>
+    <div class="emer-phone">09-XXX-XXXX</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-copy">© 2025 יחידת חילוץ רעננה — כל הזכויות שמורות</div>
+    <div class="footer-links">
+      <a class="footer-link" href="https://github.com/davidelkaim/hilutz-raanana" target="_blank">GitHub</a>
+      <span class="footer-link">אודות</span>
+      <span class="footer-link">צור קשר</span>
+      <span class="footer-link">התנדבות</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ADMIN ====== -->
+<div class="page" id="page-admin">
+
+  <div class="admin-header">
+    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+    <div class="admin-header-text">
+      <strong>אזור ניהול · Admin</strong>
+      <span>גישה מוגבלת לצוות המפקדים בלבד</span>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="atab active" onclick="showAdminTab('events', this)">אירועים ותרגילים</button>
+    <button class="atab" onclick="showAdminTab('members', this)">כוח אדם</button>
+    <button class="atab" onclick="showAdminTab('equip', this)">ציוד</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- TAB: EVENTS -->
+    <div class="asec active" id="at-events">
+      <div class="admin-toolbar">
+        <h2>אירועים ותרגילים</h2>
+        <button class="abtn" onclick="toggleNewEventForm()">+ אירוע חדש</button>
+      </div>
+
+      <!-- New event form -->
+      <div class="new-ev-form" id="new-ev-form">
+        <div class="nef-title">יצירת אירוע חדש</div>
+        <div class="nef-grid">
+          <div>
+            <label class="nef-label">שם האירוע</label>
+            <input class="nef-input" placeholder="לדוגמה: תרגיל מרץ 2025">
+          </div>
+          <div>
+            <label class="nef-label">תאריך ושעה</label>
+            <input class="nef-input" type="datetime-local">
+          </div>
+          <div>
+            <label class="nef-label">מיקום</label>
+            <input class="nef-input" placeholder="כתובת או תיאור המיקום">
+          </div>
+          <div>
+            <label class="nef-label">סוג אירוע</label>
+            <select class="nef-input">
+              <option>תרגיל</option>
+              <option>הכשרה</option>
+              <option>אירוע ממשי</option>
+              <option>כנס</option>
+            </select>
+          </div>
+        </div>
+        <div class="nef-full">
+          <label class="nef-label">קבוצות משתתפות</label>
+          <div class="cb-group">
+            <label class="cb-item"><input type="checkbox" checked> קבוצה 1 (מחלצים)</label>
+            <label class="cb-item"><input type="checkbox"> קבוצה 2 (מחלצים)</label>
+            <label class="cb-item"><input type="checkbox"> קבוצה 3 (מחלצים)</label>
+            <label class="cb-item"><input type="checkbox"> חפ"ק (לוגיסטיקה)</label>
+            <label class="cb-item"><input type="checkbox"> אוכלוסייה</label>
+          </div>
+        </div>
+        <div class="nef-grid">
+          <div>
+            <label class="nef-label">מספר רכבים</label>
+            <input class="nef-input" type="number" placeholder="0" min="0">
+          </div>
+          <div>
+            <label class="nef-label">ציוד (נגרר, תאורה, קאב)</label>
+            <input class="nef-input" placeholder="נגרר א, נגרר ב, תאורה...">
+          </div>
+        </div>
+        <div class="nef-footer">
+          <button class="abtn" onclick="addEvent()">שמור אירוע</button>
+          <button class="abtn abtn-ghost" onclick="toggleNewEventForm()">ביטול</button>
+        </div>
+      </div>
+
+      <!-- Event list -->
+      <div class="ev-list" id="ev-list">
+
+        <!-- Event 1: Active / Planning -->
+        <div class="ev-card ev-active">
+          <div class="ev-top">
+            <div>
+              <div class="ev-title">תרגיל מרץ 2025</div>
+              <div class="ev-date">20 במרץ 2025 · 19:00 · רעננה</div>
+            </div>
+            <span class="ev-badge eb-plan">בתכנון</span>
+          </div>
+          <div class="ev-stats">
+            <div class="ev-stat"><strong>28</strong> זמינים</div>
+            <div class="ev-stat"><strong>—</strong> רכבים</div>
+            <div class="ev-stat"><strong>0</strong> צוותות</div>
+          </div>
+          <div class="ev-chips">
+            <span class="chip chip-r">קבוצה 1</span>
+            <span class="chip chip-r">קבוצה 3</span>
+            <span class="chip chip-c">אוכלוסייה</span>
+          </div>
+          <div class="ev-actions">
+            <button class="ev-btn" onclick="openModal('attendance')">ניהול נוכחות</button>
+            <button class="ev-btn ev-btn-ghost" onclick="openModal('teams')">בנה צוותות</button>
+            <button class="ev-btn ev-btn-ghost" onclick="openModal('equip-ev')">ציוד לאירוע</button>
+          </div>
+        </div>
+
+        <!-- Event 2: Done -->
+        <div class="ev-card">
+          <div class="ev-top">
+            <div>
+              <div class="ev-title">תרגיל ינואר 2025</div>
+              <div class="ev-date">15 בינואר 2025 · 08:00 · רעננה</div>
+            </div>
+            <span class="ev-badge eb-done">הסתיים</span>
+          </div>
+          <div class="ev-stats">
+            <div class="ev-stat"><strong>34</strong> משתתפים</div>
+            <div class="ev-stat"><strong>8</strong> רכבים</div>
+            <div class="ev-stat"><strong>6</strong> צוותות</div>
+            <div class="ev-stat"><strong>3</strong> נגררים</div>
+          </div>
+          <div class="ev-chips">
+            <span class="chip chip-r">קבוצה 1</span>
+            <span class="chip chip-r">קבוצה 2</span>
+            <span class="chip chip-l">חפ"ק</span>
+          </div>
+        </div>
+
+        <!-- Event 3: Done -->
+        <div class="ev-card">
+          <div class="ev-top">
+            <div>
+              <div class="ev-title">הכשרה מתקדמת — נגרר</div>
+              <div class="ev-date">10 בנובמבר 2024 · 16:00 · חניון העירייה</div>
+            </div>
+            <span class="ev-badge eb-done">הסתיים</span>
+          </div>
+          <div class="ev-stats">
+            <div class="ev-stat"><strong>22</strong> משתתפים</div>
+            <div class="ev-stat"><strong>4</strong> רכבים</div>
+            <div class="ev-stat"><strong>2</strong> נגררים</div>
+          </div>
+          <div class="ev-chips">
+            <span class="chip chip-r">קבוצה 2</span>
+            <span class="chip chip-r">קבוצה 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: MEMBERS -->
+    <div class="asec" id="at-members">
+      <div class="admin-toolbar">
+        <h2>כוח אדם — 48 חברים</h2>
+        <button class="abtn" onclick="openModal('add-member')">+ הוסף חבר</button>
+      </div>
+      <div class="filters">
+        <input class="finput" placeholder="🔍  חיפוש לפי שם..." style="min-width:200px" oninput="filterMembers(this.value)">
+        <select class="fsel" onchange="filterMembers()">
+          <option value="">כל המחלקות</option>
+          <option>מחלצים · קבוצה 1</option>
+          <option>מחלצים · קבוצה 2</option>
+          <option>מחלצים · קבוצה 3</option>
+          <option>חפ"ק</option>
+          <option>אוכלוסייה</option>
+        </select>
+        <select class="fsel">
+          <option value="">כל הדרגות</option>
+          <option>מפקד היחידה</option>
+          <option>סגן מפקד היחידה</option>
+          <option>מפקד</option>
+          <option>מפקד צוות</option>
+          <option>רגיל</option>
+        </select>
+        <select class="fsel">
+          <option value="">כל הסטטוסים</option>
+          <option>פעיל</option>
+          <option>לא פעיל</option>
+        </select>
+      </div>
+      <div class="mtable-wrap">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th style="width:18%">שם</th>
+              <th style="width:20%">מחלקה</th>
+              <th style="width:18%">דרגה</th>
+              <th style="width:16%">טלפון</th>
+              <th style="width:18%">אימייל</th>
+              <th style="width:6%">סטטוס</th>
+              <th style="width:4%"></th>
+            </tr>
+          </thead>
+          <tbody id="members-tbody">
+            <tr>
+              <td style="font-weight:700">יוסי כהן</td>
+              <td><span class="dbg">מחלצים · קבוצה 1</span></td>
+              <td><span class="rbg r-cmd">מפקד היחידה</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">054-123-4567</td>
+              <td style="color:var(--tx3);font-size:12px">yossi@example.com</td>
+              <td><span class="sbg s-on">פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">מירי לוי</td>
+              <td><span class="dbg">חפ"ק</span></td>
+              <td><span class="rbg r-dep">סגן מפקד</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">052-987-6543</td>
+              <td style="color:var(--tx3);font-size:12px">miri@example.com</td>
+              <td><span class="sbg s-on">פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">אלון שמש</td>
+              <td><span class="dbg">מחלצים · קבוצה 2</span></td>
+              <td><span class="rbg r-tm">מפקד צוות</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">050-112-2334</td>
+              <td style="color:var(--tx3);font-size:12px">alon@example.com</td>
+              <td><span class="sbg s-on">פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">רונית אברהם</td>
+              <td><span class="dbg">אוכלוסייה</span></td>
+              <td><span class="rbg r-rg">רגיל</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">053-556-6778</td>
+              <td style="color:var(--tx3);font-size:12px">ronit@example.com</td>
+              <td><span class="sbg s-off">לא פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">דוד גרין</td>
+              <td><span class="dbg">מחלצים · קבוצה 3</span></td>
+              <td><span class="rbg r-rg">רגיל</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">058-334-4556</td>
+              <td style="color:var(--tx3);font-size:12px">david@example.com</td>
+              <td><span class="sbg s-on">פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">נועה ברק</td>
+              <td><span class="dbg">מחלצים · קבוצה 1</span></td>
+              <td><span class="rbg r-tm">מפקד צוות</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">054-778-9900</td>
+              <td style="color:var(--tx3);font-size:12px">noa@example.com</td>
+              <td><span class="sbg s-on">פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">אמיר דוד</td>
+              <td><span class="dbg">חפ"ק</span></td>
+              <td><span class="rbg r-rg">רגיל</span></td>
+              <td style="color:var(--tx3);direction:ltr;text-align:right">052-445-5667</td>
+              <td style="color:var(--tx3);font-size:12px">amir@example.com</td>
+              <td><span class="sbg s-on">פעיל</span></td>
+              <td><button class="ibtn" title="ערוך">✏</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--tx3);margin-top:12px;text-align:center">
+        מציג 7 מתוך 48 חברים · <span style="color:var(--or);cursor:pointer">טען הכל</span>
+      </p>
+    </div>
+
+    <!-- TAB: EQUIPMENT -->
+    <div class="asec" id="at-equip">
+      <div class="admin-toolbar">
+        <h2>ניהול ציוד</h2>
+        <button class="abtn">+ הוסף פריט</button>
+      </div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">קבוצה 1</div>
+        <div class="eq-grid">
+          <div class="eq-card">
+            <div class="eq-top">
+              <div class="eq-name">נגרר א׳</div>
+              <span class="eq-grp">קבוצה 1</span>
+            </div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: ינואר 2025</div>
+          </div>
+          <div class="eq-card">
+            <div class="eq-top">
+              <div class="eq-name">נגרר ב׳</div>
+              <span class="eq-grp">קבוצה 1</span>
+            </div>
+            <div class="eq-status"><span class="sdot dot-a"></span>בתחזוקה</div>
+            <div class="eq-last">צפוי לחזור: 01/04/2025</div>
+          </div>
+          <div class="eq-card">
+            <div class="eq-top">
+              <div class="eq-name">תאורה</div>
+              <span class="eq-grp">קבוצה 1</span>
+            </div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: ינואר 2025</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">קבוצה 2</div>
+        <div class="eq-grid">
+          <div class="eq-card">
+            <div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-grp">קבוצה 2</span></div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: דצמבר 2024</div>
+          </div>
+          <div class="eq-card">
+            <div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-grp">קבוצה 2</span></div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: נובמבר 2024</div>
+          </div>
+          <div class="eq-card">
+            <div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-grp">קבוצה 2</span></div>
+            <div class="eq-status"><span class="sdot dot-r"></span>בשימוש באירוע</div>
+            <div class="eq-last">שימוש אחרון: מרץ 2025</div>
+            <div class="eq-event">↳ תרגיל מרץ 2025</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">קבוצה 3</div>
+        <div class="eq-grid">
+          <div class="eq-card">
+            <div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-grp">קבוצה 3</span></div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: ספטמבר 2024</div>
+          </div>
+          <div class="eq-card">
+            <div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-grp">קבוצה 3</span></div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: אוקטובר 2024</div>
+          </div>
+          <div class="eq-card">
+            <div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-grp">קבוצה 3</span></div>
+            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
+            <div class="eq-last">שימוש אחרון: ספטמבר 2024</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /admin-body -->
+</div><!-- /page-admin -->
+
+<!-- ====== MODALS ====== -->
+
+<!-- Attendance Modal -->
+<div class="modal-overlay" id="modal-attendance" onclick="closeModalOnBg(event,'modal-attendance')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">ניהול נוכחות — תרגיל מרץ 2025</div>
+      <button class="modal-close" onclick="closeModal('modal-attendance')">×</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="showMTab('att-list','modal-attendance',this)">רשימת משתתפים</button>
+      <button class="mtab" onclick="showMTab('att-avail','modal-attendance',this)">זמינות מוקדמת</button>
+    </div>
+
+    <div class="msec active" id="att-list">
+      <div class="att-stats">
+        <div class="att-stat"><div class="att-stat-n">28</div><div class="att-stat-l">זמינים</div></div>
+        <div class="att-stat"><div class="att-stat-n" style="color:#acd36a">19</div><div class="att-stat-l">נוכחים</div></div>
+        <div class="att-stat"><div class="att-stat-n" style="color:#EF9F27">9</div><div class="att-stat-l">נעדרים</div></div>
+        <div class="att-stat"><div class="att-stat-n">3</div><div class="att-stat-l">לא ידוע</div></div>
+      </div>
+      <div class="att-list">
+        <div class="att-item">
+          <div class="att-av">י.כ</div>
+          <div style="flex:1"><div class="att-name">יוסי כהן</div><div class="att-role">מפקד היחידה · קבוצה 1</div></div>
+          <div class="att-dept">מחלצים</div>
+          <div class="att-toggle">
+            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
+            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
+          </div>
+        </div>
+        <div class="att-item">
+          <div class="att-av">מ.ל</div>
+          <div style="flex:1"><div class="att-name">מירי לוי</div><div class="att-role">סגן מפקד · חפ"ק</div></div>
+          <div class="att-dept">חפ"ק</div>
+          <div class="att-toggle">
+            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
+            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
+          </div>
+        </div>
+        <div class="att-item">
+          <div class="att-av">א.ש</div>
+          <div style="flex:1"><div class="att-name">אלון שמש</div><div class="att-role">מפקד צוות · קבוצה 2</div></div>
+          <div class="att-dept">מחלצים</div>
+          <div class="att-toggle">
+            <button class="att-btn" onclick="toggleAtt(this,'present')">נוכח</button>
+            <button class="att-btn absent" onclick="toggleAtt(this,'absent')">נעדר ✗</button>
+          </div>
+        </div>
+        <div class="att-item">
+          <div class="att-av">ר.א</div>
+          <div style="flex:1"><div class="att-name">רונית אברהם</div><div class="att-role">רגיל · אוכלוסייה</div></div>
+          <div class="att-dept">אוכלוסייה</div>
+          <div class="att-toggle">
+            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
+            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
+          </div>
+        </div>
+        <div class="att-item">
+          <div class="att-av">ד.ג</div>
+          <div style="flex:1"><div class="att-name">דוד גרין</div><div class="att-role">רגיל · קבוצה 3</div></div>
+          <div class="att-dept">מחלצים</div>
+          <div class="att-toggle">
+            <button class="att-btn" onclick="toggleAtt(this,'present')">נוכח</button>
+            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
+          </div>
+        </div>
+        <div class="att-item">
+          <div class="att-av">נ.ב</div>
+          <div style="flex:1"><div class="att-name">נועה ברק</div><div class="att-role">מפקד צוות · קבוצה 1</div></div>
+          <div class="att-dept">מחלצים</div>
+          <div class="att-toggle">
+            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
+            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--bd);display:flex;gap:10px;align-items:center">
+        <button class="abtn" style="font-size:13px">שמור נוכחות</button>
+        <button class="abtn abtn-ghost" style="font-size:13px">+ הוסף משתתף</button>
+        <span style="font-size:12px;color:var(--tx3);margin-right:auto">עדכון אחרון: עכשיו</span>
+      </div>
+    </div>
+
+    <div class="msec" id="att-avail">
+      <p style="font-size:13px;color:var(--tx2);margin-bottom:16px">רשימת המתנדבים שדיווחו על זמינות מוקדמת לאירוע זה</p>
+      <div class="att-list">
+        <div class="att-item">
+          <div class="att-av">י.כ</div>
+          <div style="flex:1"><div class="att-name">יוסי כהן</div><div class="att-role">קבוצה 1</div></div>
+          <span class="sbg s-on">זמין</span>
+        </div>
+        <div class="att-item">
+          <div class="att-av">מ.ל</div>
+          <div style="flex:1"><div class="att-name">מירי לוי</div><div class="att-role">חפ"ק</div></div>
+          <span class="sbg s-on">זמין</span>
+        </div>
+        <div class="att-item">
+          <div class="att-av">א.ש</div>
+          <div style="flex:1"><div class="att-name">אלון שמש</div><div class="att-role">קבוצה 2</div></div>
+          <span class="sbg s-off">לא זמין</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Teams Modal -->
+<div class="modal-overlay" id="modal-teams" onclick="closeModalOnBg(event,'modal-teams')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">בניית צוותות — תרגיל מרץ 2025</div>
+      <button class="modal-close" onclick="closeModal('modal-teams')">×</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:13px;color:var(--tx2)">גרור חברים בין הצוותות או לחץ + להוספה</div>
+      <button class="abtn" style="font-size:12px">+ צוות חדש</button>
+    </div>
+    <div class="teams-area">
+      <div class="team-card">
+        <div class="team-card-header">
+          <div class="team-card-title">צוות א׳</div>
+          <span style="font-size:11px;color:var(--tx3)">3 חברים</span>
+        </div>
+        <div class="team-members">
+          <div class="team-member">
+            <div class="tm-av">י.כ</div>
+            <span>יוסי כהן</span>
+            <span class="tm-role">מפקד צוות</span>
+          </div>
+          <div class="team-member">
+            <div class="tm-av">נ.ב</div>
+            <span>נועה ברק</span>
+            <span class="tm-role">מחלץ</span>
+          </div>
+          <div class="team-member">
+            <div class="tm-av">ד.ג</div>
+            <span>דוד גרין</span>
+            <span class="tm-role">מחלץ</span>
+          </div>
+        </div>
+        <button class="add-member-btn">+ הוסף חבר לצוות</button>
+      </div>
+      <div class="team-card">
+        <div class="team-card-header">
+          <div class="team-card-title">צוות ב׳</div>
+          <span style="font-size:11px;color:var(--tx3)">2 חברים</span>
+        </div>
+        <div class="team-members">
+          <div class="team-member">
+            <div class="tm-av">מ.ל</div>
+            <span>מירי לוי</span>
+            <span class="tm-role">מפקד צוות</span>
+          </div>
+          <div class="team-member">
+            <div class="tm-av">ר.א</div>
+            <span>רונית אברהם</span>
+            <span class="tm-role">לוגיסטיקה</span>
+          </div>
+        </div>
+        <button class="add-member-btn">+ הוסף חבר לצוות</button>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bd);display:flex;gap:10px">
+      <button class="abtn">שמור צוותות</button>
+      <button class="abtn abtn-ghost" onclick="closeModal('modal-teams')">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- Equipment for event Modal -->
+<div class="modal-overlay" id="modal-equip-ev" onclick="closeModalOnBg(event,'modal-equip-ev')">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div class="modal-title">ציוד לאירוע — תרגיל מרץ 2025</div>
+      <button class="modal-close" onclick="closeModal('modal-equip-ev')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:12px;color:var(--tx3);margin-bottom:4px">בחר ציוד שישמש באירוע זה</div>
+      <div class="att-item" style="justify-content:space-between">
+        <span style="font-weight:700">נגרר א׳ — קבוצה 1</span>
+        <span class="sbg s-on">זמין</span>
+        <label class="cb-item"><input type="checkbox" checked> שייך לאירוע</label>
+      </div>
+      <div class="att-item" style="justify-content:space-between">
+        <span style="font-weight:700">נגרר ב׳ — קבוצה 1</span>
+        <span class="sbg s-off">בתחזוקה</span>
+        <label class="cb-item"><input type="checkbox" disabled> לא זמין</label>
+      </div>
+      <div class="att-item" style="justify-content:space-between">
+        <span style="font-weight:700">תאורה — קבוצה 2</span>
+        <span class="sbg s-on">זמין</span>
+        <label class="cb-item"><input type="checkbox"> שייך לאירוע</label>
+      </div>
+      <div class="att-item" style="justify-content:space-between">
+        <span style="font-weight:700">נגרר א׳ — קבוצה 3</span>
+        <span class="sbg s-on">זמין</span>
+        <label class="cb-item"><input type="checkbox"> שייך לאירוע</label>
+      </div>
+    </div>
+    <div style="margin-top:8px">
+      <label class="nef-label" style="margin-top:14px;display:block">מספר רכבים</label>
+      <input class="nef-input" type="number" placeholder="0" value="4" style="max-width:120px">
+    </div>
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--bd);display:flex;gap:10px">
+      <button class="abtn">שמור</button>
+      <button class="abtn abtn-ghost" onclick="closeModal('modal-equip-ev')">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="modal-overlay" id="modal-add-member" onclick="closeModalOnBg(event,'modal-add-member')">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title">הוספת חבר חדש</div>
+      <button class="modal-close" onclick="closeModal('modal-add-member')">×</button>
+    </div>
+    <div class="modal-form-grid">
+      <div class="mfg"><label class="mfl">שם פרטי</label><input class="mfi" placeholder="שם פרטי"></div>
+      <div class="mfg"><label class="mfl">שם משפחה</label><input class="mfi" placeholder="שם משפחה"></div>
+      <div class="mfg"><label class="mfl">טלפון</label><input class="mfi" type="tel" placeholder="05X-XXX-XXXX" style="direction:ltr"></div>
+      <div class="mfg"><label class="mfl">אימייל</label><input class="mfi" type="email" placeholder="email@example.com" style="direction:ltr"></div>
+      <div class="mfg">
+        <label class="mfl">מחלקה</label>
+        <select class="mfi">
+          <option>מחלצים · קבוצה 1</option>
+          <option>מחלצים · קבוצה 2</option>
+          <option>מחלצים · קבוצה 3</option>
+          <option>חפ"ק</option>
+          <option>אוכלוסייה</option>
+        </select>
+      </div>
+      <div class="mfg">
+        <label class="mfl">דרגה</label>
+        <select class="mfi">
+          <option>רגיל</option>
+          <option>מפקד צוות</option>
+          <option>מפקד</option>
+          <option>סגן מפקד היחידה</option>
+          <option>מפקד היחידה</option>
+        </select>
+      </div>
+    </div>
+    <div class="mfg">
+      <label class="mfl">הערות</label>
+      <textarea class="mfi" rows="3" placeholder="הערות נוספות..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="abtn">הוסף חבר</button>
+      <button class="abtn abtn-ghost" onclick="closeModal('modal-add-member')">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SCRIPTS ====== -->
+<script>
+  // Page navigation
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    window.scrollTo(0, 0);
+    const map = { home: 0, admin: 1 };
+    if (map[name] !== undefined) {
+      document.querySelectorAll('.nav-link')[map[name]].classList.add('active');
+    }
+  }
+
+  // Admin tabs
+  function showAdminTab(name, el) {
+    document.querySelectorAll('.asec').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
+    document.getElementById('at-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+
+  // New event form
+  function toggleNewEventForm() {
+    const f = document.getElementById('new-ev-form');
+    f.classList.toggle('visible');
+  }
+
+  function addEvent() {
+    alert('האירוע נשמר! (בגרסה הסופית יישמר ב-Firebase)');
+    toggleNewEventForm();
+  }
+
+  // Modals
+  function openModal(name) {
+    document.getElementById('modal-' + name).classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOnBg(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+  }
+
+  // Modal tabs
+  function showMTab(secId, modalId, el) {
+    const modal = document.getElementById(modalId);
+    modal.querySelectorAll('.msec').forEach(s => s.classList.remove('active'));
+    modal.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+    document.getElementById(secId).classList.add('active');
+    el.classList.add('active');
+  }
+
+  // Attendance toggle
+  function toggleAtt(btn, status) {
+    const group = btn.closest('.att-toggle');
+    group.querySelectorAll('.att-btn').forEach(b => {
+      b.classList.remove('present', 'absent');
+      b.textContent = b.textContent.replace(' ✓','').replace(' ✗','');
+    });
+    btn.classList.add(status);
+    if (status === 'present') btn.textContent = 'נוכח ✓';
+    if (status === 'absent') btn.textContent = 'נעדר ✗';
+  }
+
+  // Member filter (basic demo)
+  function filterMembers(val) {
+    // In final version: filter from Firebase
+    console.log('Filtering:', val);
+  }
+
+  // ESC to close modals
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.visible').forEach(m => {
+        m.classList.remove('visible');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+</script>
+</body>
+</html>
