@@ -299,9 +299,9 @@ table.mtbl tbody tr:hover td{background:var(--bg2)}
       </div>
       <div class="fld-full"><label>קבוצות משתתפות</label>
         <div class="cb-row">
-          <label class="cb-item"><input type="checkbox" id="eg1"> קבוצה 1 (מחלצים)</label>
-          <label class="cb-item"><input type="checkbox" id="eg2"> קבוצה 2 (מחלצים)</label>
-          <label class="cb-item"><input type="checkbox" id="eg3"> קבוצה 3 (מחלצים)</label>
+          <label class="cb-item"><input type="checkbox" id="eg1"> צוות 1 (מחלצים)</label>
+          <label class="cb-item"><input type="checkbox" id="eg2"> צוות 2 (מחלצים)</label>
+          <label class="cb-item"><input type="checkbox" id="eg3"> צוות 3 (מחלצים)</label>
           <label class="cb-item"><input type="checkbox" id="egchpk"> חפ"ק</label>
           <label class="cb-item"><input type="checkbox" id="egpop"> אוכלוסייה</label>
         </div>
@@ -337,19 +337,18 @@ table.mtbl tbody tr:hover td{background:var(--bg2)}
       <input class="fi fi-search" id="search-members" placeholder="🔍  חיפוש לפי שם..." oninput="renderMembersTable()">
       <select class="fi" id="filter-dept" onchange="renderMembersTable()">
         <option value="">כל המחלקות</option>
-        <option>מחלצים · קבוצה 1</option>
-        <option>מחלצים · קבוצה 2</option>
-        <option>מחלצים · קבוצה 3</option>
+        <option>צוות 1</option>
+        <option>צוות 2</option>
+        <option>צוות 3</option>
         <option>חפ"ק</option>
         <option>אוכלוסייה</option>
       </select>
       <select class="fi" id="filter-role" onchange="renderMembersTable()">
-        <option value="">כל הדרגות</option>
+        <option value="">כל התפקידים</option>
         <option>מפקד היחידה</option>
         <option>סגן מפקד היחידה</option>
-        <option>מפקד</option>
-        <option>מפקד צוות</option>
-        <option>רגיל</option>
+        <option>מפקד מחלקה</option>
+        <option>מחלץ</option>
       </select>
       <select class="fi" id="filter-status" onchange="renderMembersTable()">
         <option value="">כל הסטטוסים</option>
@@ -363,7 +362,7 @@ table.mtbl tbody tr:hover td{background:var(--bg2)}
           <tr>
             <th style="width:17%">שם</th>
             <th style="width:19%">מחלקה</th>
-            <th style="width:15%">דרגה</th>
+            <th style="width:15%">תפקיד</th>
             <th style="width:14%">טלפון</th>
             <th style="width:16%">אימייל</th>
             <th style="width:8%">סטטוס</th>
@@ -405,26 +404,30 @@ table.mtbl tbody tr:hover td{background:var(--bg2)}
         <div class="mfg"><label>שם משפחה</label><input id="m-last" placeholder="שם משפחה"></div>
         <div class="mfg"><label>טלפון</label><input id="m-phone" type="tel" placeholder="05X-XXX-XXXX" style="direction:ltr"></div>
         <div class="mfg"><label>אימייל</label><input id="m-email" type="email" placeholder="email@example.com" style="direction:ltr"></div>
-        <div class="mfg"><label>מחלקה</label>
-          <select id="m-dept">
-            <option>מחלצים · קבוצה 1</option>
-            <option>מחלצים · קבוצה 2</option>
-            <option>מחלצים · קבוצה 3</option>
-            <option>חפ"ק</option>
-            <option>אוכלוסייה</option>
-          </select>
-        </div>
-        <div class="mfg"><label>דרגה</label>
-          <select id="m-role">
-            <option>רגיל</option>
-            <option>מפקד צוות</option>
-            <option>מפקד</option>
+        <div class="mfg"><label>תפקיד</label>
+          <select id="m-role" onchange="toggleDeptField(this.value)">
+            <option>מחלץ</option>
+            <option>מפקד מחלקה</option>
             <option>סגן מפקד היחידה</option>
             <option>מפקד היחידה</option>
           </select>
         </div>
+        <div class="mfg" id="dept-field"><label>מחלקה</label>
+          <select id="m-dept">
+            <option>צוות 1</option>
+            <option>צוות 2</option>
+            <option>צוות 3</option>
+            <option>חפ"ק</option>
+            <option>אוכלוסייה</option>
+          </select>
+        </div>
         <div class="mfg"><label>סטטוס</label>
           <select id="m-status"><option value="פעיל">פעיל</option><option value="לא פעיל">לא פעיל</option></select>
+        </div>
+        <div class="mfg" id="tsevet-field" style="display:flex;align-items:center;gap:10px;padding-top:20px">
+          <input type="checkbox" id="m-tsevet" style="accent-color:#E8650A;width:17px;height:17px;flex-shrink:0">
+          <label for="m-tsevet" style="font-size:13px;font-weight:600;color:var(--tx);letter-spacing:0;text-transform:none;cursor:pointer">יכול להיות מפקד צוות</label>
+        </div
         </div>
       </div>
       <div style="display:flex;gap:10px">
@@ -522,7 +525,7 @@ table.mtbl tbody tr:hover td{background:var(--bg2)}
       <div class="mfg-grid">
         <div class="mfg"><label>קבוצה</label>
           <select id="eq-group">
-            <option>קבוצה 1</option><option>קבוצה 2</option><option>קבוצה 3</option><option>חפ"ק</option>
+            <option>צוות 1</option><option>צוות 2</option><option>צוות 3</option><option>חפ"ק</option>
           </select>
         </div>
         <div class="mfg"><label>סטטוס</label>
@@ -558,7 +561,7 @@ table.mtbl tbody tr:hover td{background:var(--bg2)}
         <div id="csv-content"></div>
       </div>
       <div style="margin-top:10px;padding:10px;background:var(--bg2);border-radius:var(--r);font-size:12px;color:var(--tx2)">
-        <strong>עמודות:</strong> שם פרטי, שם משפחה, טלפון, אימייל, מחלקה, דרגה
+        <strong>עמודות:</strong> שם פרטי, שם משפחה, טלפון, אימייל, מחלקה, תפקיד
       </div>
       <div style="display:flex;gap:10px;margin-top:14px">
         <button class="btn btn-p btn-sm" id="csv-import-btn" style="display:none" onclick="doImport()">ייבא חברים</button>
@@ -705,9 +708,9 @@ window.saveEvent = async function() {
   btn.disabled = true; btn.textContent = 'שומר...';
 
   const groups = [];
-  if (document.getElementById('eg1').checked) groups.push('קבוצה 1');
-  if (document.getElementById('eg2').checked) groups.push('קבוצה 2');
-  if (document.getElementById('eg3').checked) groups.push('קבוצה 3');
+  if (document.getElementById('eg1').checked) groups.push('צוות 1');
+  if (document.getElementById('eg2').checked) groups.push('צוות 2');
+  if (document.getElementById('eg3').checked) groups.push('צוות 3');
   if (document.getElementById('egchpk').checked) groups.push('חפ"ק');
   if (document.getElementById('egpop').checked) groups.push('אוכלוסייה');
 
@@ -794,8 +797,8 @@ window.deleteEvent = async function(id) {
 // ══════════════════════════
 function roleClass(role) {
   if (role === 'מפקד היחידה') return 'r-cmd';
-  if (role === 'סגן מפקד היחידה' || role === 'מפקד') return 'r-dep';
-  if (role === 'מפקד צוות') return 'r-tm';
+  if (role === 'סגן מפקד היחידה') return 'r-dep';
+  if (role === 'מפקד מחלקה') return 'r-tm';
   return 'r-rg';
 }
 function initials(first, last) {
@@ -831,7 +834,7 @@ window.renderMembersTable = function() {
     <tr>
       <td style="font-weight:700">${m.first} ${m.last}</td>
       <td><span class="dbg">${m.dept || ''}</span></td>
-      <td><span class="rbg ${roleClass(m.role)}">${m.role || ''}</span></td>
+      <td><span class="rbg ${roleClass(m.role)}">${m.role || ''}</span>${m.canTsevet ? ' <span class="rbg r-tm" style="font-size:10px">מפקד צוות</span>' : ''}</td>
       <td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">${m.phone || ''}</td>
       <td style="color:var(--tx3);font-size:12px;word-break:break-all">${m.email || ''}</td>
       <td><span class="sbg ${m.status === 'פעיל' ? 's-on' : 's-off'}">${m.status || ''}</span></td>
@@ -851,8 +854,10 @@ window.openAddMember = function() {
   document.getElementById('member-edit-id').value = '';
   document.getElementById('member-delete-btn').style.display = 'none';
   ['m-first','m-last','m-phone','m-email'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('m-dept').value = 'מחלצים · קבוצה 1';
-  document.getElementById('m-role').value = 'רגיל';
+  document.getElementById('m-dept').value = 'צוות 1';
+  document.getElementById('m-role').value = 'מחלץ';
+  document.getElementById('m-tsevet').checked = false;
+  toggleDeptField('מחלץ');
   document.getElementById('m-status').value = 'פעיל';
   openM('modal-member');
 };
@@ -868,8 +873,10 @@ window.openEditMember = function(id) {
   document.getElementById('m-last').value   = m.last   || '';
   document.getElementById('m-phone').value  = m.phone  || '';
   document.getElementById('m-email').value  = m.email  || '';
-  document.getElementById('m-dept').value   = m.dept   || 'מחלצים · קבוצה 1';
-  document.getElementById('m-role').value   = m.role   || 'רגיל';
+  document.getElementById('m-role').value   = m.role   || 'מחלץ';
+  document.getElementById('m-dept').value   = m.dept   || 'צוות 1';
+  document.getElementById('m-tsevet').checked = m.canTsevet || false;
+  toggleDeptField(m.role || 'מחלץ');
   document.getElementById('m-status').value = m.status || 'פעיל';
   openM('modal-member');
 };
@@ -883,8 +890,9 @@ window.saveMember = async function() {
     first, last,
     phone:  document.getElementById('m-phone').value.trim(),
     email:  document.getElementById('m-email').value.trim(),
-    dept:   document.getElementById('m-dept').value,
     role:   document.getElementById('m-role').value,
+    dept:   (['מפקד היחידה','סגן מפקד היחידה'].includes(document.getElementById('m-role').value)) ? '' : document.getElementById('m-dept').value,
+    canTsevet: document.getElementById('m-tsevet').checked,
     status: document.getElementById('m-status').value,
   };
 
@@ -1211,7 +1219,7 @@ window.doImport = async function() {
 };
 
 window.dlTpl = function() {
-  const csv = 'שם פרטי,שם משפחה,טלפון,אימייל,מחלקה,דרגה\nיוסי,כהן,054-0000000,email@example.com,מחלצים · קבוצה 1,רגיל';
+  const csv = 'שם פרטי,שם משפחה,טלפון,אימייל,מחלקה,תפקיד\nיוסי,כהן,054-0000000,email@example.com,צוות 1,מחלץ';
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
   a.download = 'template_members.csv'; a.click();
@@ -1241,6 +1249,17 @@ function startListeners() {
     buildEquipSelector();
   });
 }
+
+
+window.toggleDeptField = function(role) {
+  const noMahlakaRoles = ['מפקד היחידה', 'סגן מפקד היחידה'];
+  const deptField = document.getElementById('dept-field');
+  const tsevet = document.getElementById('tsevet-field');
+  const isMahlatz = role === 'מחלץ';
+  const noMahlaka = noMahlakaRoles.includes(role);
+  if (deptField) deptField.style.display = noMahlaka ? 'none' : '';
+  if (tsevet) tsevet.style.display = isMahlatz ? 'flex' : 'none';
+};
 
 // ── START ──
 try {
