@@ -4,1546 +4,810 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>יחידת חילוץ רעננה</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  /* ===== RESET & BASE ===== */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --or: #E8650A;
-    --or2: #c4530a;
-    --or3: #ff8c3a;
-    --orlt: rgba(232,101,10,0.12);
-    --dk: #0f0f0f;
-    --dk2: #161616;
-    --dk3: #202020;
-    --dk4: #2a2a2a;
-    --dk5: #333333;
-    --tx: #ffffff;
-    --tx2: rgba(255,255,255,0.6);
-    --tx3: rgba(255,255,255,0.3);
-    --bd: rgba(255,255,255,0.07);
-    --bd2: rgba(255,255,255,0.14);
-  }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Segoe UI', Arial, 'Helvetica Neue', sans-serif;
-    background: var(--dk);
-    color: var(--tx);
-    min-height: 100vh;
-    direction: rtl;
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Heebo',Arial,sans-serif;background:#fff;color:#111;direction:rtl;-webkit-font-smoothing:antialiased}
+:root{
+  --or:#E8650A;--or2:#c4530a;--or-lt:#fff4ee;--or-mid:rgba(232,101,10,.12);
+  --bg:#ffffff;--bg2:#f7f7f6;--bg3:#efefed;
+  --tx:#111111;--tx2:#555555;--tx3:#999999;
+  --bd:#e4e4e2;--bd2:#cececa;
+  --r:6px;--rl:10px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
+  --sh-md:0 4px 20px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.05);
+}
 
-  /* ===== NAV ===== */
-  .nav {
-    position: fixed;
-    top: 0; right: 0; left: 0;
-    z-index: 1000;
-    height: 62px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    background: rgba(10,10,10,0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(232,101,10,0.25);
-  }
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .logo-unit {
-    width: 40px; height: 40px;
-    border-radius: 5px;
-    overflow: hidden;
-    background: #222;
-    flex-shrink: 0;
-  }
-  .logo-unit img {
-    width: 100%; height: 100%;
-    object-fit: contain;
-  }
-  .nav-sep { width: 1px; height: 32px; background: var(--bd2); }
-  .city-logo {
-    display: flex; flex-direction: column;
-    align-items: center; gap: 2px;
-  }
-  .city-shield {
-    width: 28px; height: 28px;
-    background: var(--or);
-    border-radius: 3px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .city-shield svg { width: 15px; height: 15px; fill: white; }
-  .city-label { font-size: 9px; color: var(--tx3); letter-spacing: .04em; }
-  .unit-text { line-height: 1.25; }
-  .unit-name { font-size: 14px; font-weight: 700; color: white; }
-  .unit-sub { font-size: 10px; color: var(--tx3); }
-  .nav-links {
-    display: flex;
-    gap: 0;
-  }
-  .nav-link {
-    padding: 0 14px;
-    height: 62px;
-    display: flex; align-items: center;
-    font-size: 13px;
-    color: var(--tx2);
-    cursor: pointer;
-    border: none; background: none;
-    font-family: inherit;
-    border-bottom: 2px solid transparent;
-    transition: color .2s, border-color .2s;
-    white-space: nowrap;
-    text-decoration: none;
-  }
-  .nav-link:hover { color: white; }
-  .nav-link.active { color: var(--or); border-bottom-color: var(--or); font-weight: 600; }
-  .nav-social { display: flex; gap: 8px; }
-  .nsoc {
-    width: 30px; height: 30px;
-    border-radius: 4px;
-    border: 1px solid var(--bd2);
-    background: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
-    text-decoration: none;
-  }
-  .nsoc:hover { background: var(--or); border-color: var(--or); }
-  .nsoc svg { width: 14px; height: 14px; fill: rgba(255,255,255,.65); }
-  .nsoc:hover svg { fill: white; }
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:999;height:66px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.nav-brand{display:flex;align-items:center;gap:12px}
+.logo-box{width:40px;height:40px;border-radius:7px;overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.logo-box img{width:100%;height:100%;object-fit:contain}
+.vsep{width:1px;height:28px;background:var(--bd2)}
+.city-logo{display:flex;flex-direction:column;align-items:center;gap:2px}
+.city-dot{width:26px;height:26px;border-radius:5px;background:var(--or);display:flex;align-items:center;justify-content:center}
+.city-dot svg{width:14px;height:14px;fill:#fff}
+.city-lbl{font-size:9px;color:var(--tx3);font-weight:600;letter-spacing:.04em}
+.brand-name{font-size:14px;font-weight:800;color:var(--tx);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--tx3)}
+.nav-links{display:flex;justify-content:center;gap:2px}
+.nl{padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;color:var(--tx2);cursor:pointer;border:none;background:none;font-family:inherit;transition:all .18s;white-space:nowrap}
+.nl:hover{color:var(--tx);background:var(--bg2)}
+.nl.active{color:var(--or);background:var(--or-lt);font-weight:700}
+.nl-admin{background:var(--or)!important;color:#fff!important;font-weight:700!important}
+.nl-admin:hover{background:var(--or2)!important}
+.nav-right{display:flex;justify-content:flex-end;gap:8px}
+.soc{width:32px;height:32px;border-radius:var(--r);border:1px solid var(--bd);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;text-decoration:none}
+.soc:hover{background:var(--or);border-color:var(--or)}
+.soc svg{width:14px;height:14px;fill:var(--tx3)}
+.soc:hover svg{fill:#fff}
 
-  /* ===== PAGES ===== */
-  .page { display: none; padding-top: 62px; min-height: 100vh; }
-  .page.active { display: block; }
+/* PAGES */
+.page{display:none;padding-top:66px;min-height:100vh}
+.page.active{display:block}
 
-  /* ===== HOME: HERO ===== */
-  .hero {
-    position: relative;
-    height: calc(100vh - 62px);
-    min-height: 500px;
-    max-height: 780px;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: #0a0a0a;
-  }
-  .hero-bg img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    opacity: .42;
-    transition: opacity .4s;
-  }
-  .hero-grad {
-    position: absolute; inset: 0;
-    background: linear-gradient(
-      105deg,
-      rgba(232,101,10,0.08) 0%,
-      transparent 55%
-    ),
-    linear-gradient(
-      to top,
-      rgba(0,0,0,.92) 0%,
-      rgba(0,0,0,.4) 50%,
-      rgba(0,0,0,.1) 100%
-    );
-  }
-  .hero-stripe {
-    position: absolute; top: 0; right: 0;
-    width: 5px; height: 100%;
-    background: var(--or);
-  }
-  .hero-content {
-    position: relative; z-index: 2;
-    padding: 0 56px 56px;
-    max-width: 700px;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 9px;
-    background: var(--or);
-    color: white;
-    font-size: 11px; font-weight: 700;
-    padding: 5px 14px;
-    border-radius: 2px;
-    margin-bottom: 22px;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-  }
-  .hero-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: white;
-    animation: blink 2s infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-  .hero h1 {
-    font-size: 46px;
-    font-weight: 900;
-    color: white;
-    line-height: 1.1;
-    margin-bottom: 18px;
-    letter-spacing: -.02em;
-  }
-  .hero h1 em { color: var(--or); font-style: normal; }
-  .hero-desc {
-    font-size: 16px;
-    color: rgba(255,255,255,.65);
-    line-height: 1.75;
-    margin-bottom: 32px;
-    max-width: 520px;
-  }
-  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-  .btn-or {
-    padding: 13px 30px;
-    background: var(--or); color: white;
-    border: none; border-radius: 3px;
-    font-size: 14px; font-weight: 700;
-    cursor: pointer; font-family: inherit;
-    letter-spacing: .03em;
-    transition: background .2s;
-  }
-  .btn-or:hover { background: var(--or2); }
-  .btn-ghost {
-    padding: 12px 28px;
-    background: transparent; color: white;
-    border: 1px solid rgba(255,255,255,.35);
-    border-radius: 3px;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: all .2s;
-  }
-  .btn-ghost:hover { border-color: white; background: rgba(255,255,255,.07); }
+/* HERO */
+.hero{position:relative;height:calc(100vh - 66px);min-height:480px;max-height:740px;overflow:hidden;display:flex;align-items:flex-end;background:#0a0a0a}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.44}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.25) 55%,transparent 100%)}
+.hero-bar{position:absolute;top:0;right:0;width:4px;height:100%;background:var(--or)}
+.hero-content{position:relative;z-index:2;padding:0 68px 60px;max-width:700px}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--or);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:30px;margin-bottom:22px}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:#fff;animation:dp 2s infinite}
+@keyframes dp{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{font-size:50px;font-weight:900;color:#fff;line-height:1.08;margin-bottom:18px;letter-spacing:-.02em}
+.hero h1 em{color:var(--or);font-style:normal}
+.hero p{font-size:16px;color:rgba(255,255,255,.62);line-height:1.8;margin-bottom:34px;max-width:500px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-fill{padding:13px 30px;background:var(--or);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .18s}
+.btn-fill:hover{background:var(--or2)}
+.btn-out{padding:12px 26px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.38);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-out:hover{border-color:#fff;background:rgba(255,255,255,.08)}
 
-  /* ===== HOME: STATS BAR ===== */
-  .stats-bar {
-    display: flex;
-    background: rgba(12,12,12,.97);
-    border-top: 1px solid var(--or);
-  }
-  .stat-item {
-    flex: 1;
-    padding: 20px 16px;
-    text-align: center;
-    border-left: 1px solid var(--bd);
-  }
-  .stat-item:last-child { border-left: none; }
-  .stat-n { font-size: 30px; font-weight: 900; color: var(--or); line-height: 1; }
-  .stat-l { font-size: 11px; color: var(--tx3); margin-top: 4px; letter-spacing: .04em; }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);border-top:3px solid var(--or);background:#fff}
+.si{padding:22px 12px;text-align:center;border-left:1px solid var(--bd)}
+.si:last-child{border-left:none}
+.si-n{font-size:30px;font-weight:900;color:var(--or);line-height:1}
+.si-l{font-size:11px;color:var(--tx3);font-weight:500;margin-top:5px;letter-spacing:.03em}
 
-  /* ===== HOME: TICKER ===== */
-  .ticker {
-    background: var(--or);
-    padding: 11px 32px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .ticker-tag {
-    font-size: 11px; font-weight: 800;
-    background: rgba(0,0,0,.22);
-    color: white;
-    padding: 3px 10px; border-radius: 2px;
-    letter-spacing: .05em;
-    white-space: nowrap;
-    text-transform: uppercase;
-  }
-  .ticker-text { font-size: 13px; color: white; font-weight: 500; }
-  .ticker-date { font-size: 11px; color: rgba(255,255,255,.7); margin-right: auto; white-space: nowrap; }
+/* TICKER */
+.ticker{background:var(--or);padding:11px 36px;display:flex;align-items:center;gap:14px}
+.ticker-tag{font-size:11px;font-weight:800;color:#fff;background:rgba(0,0,0,.18);padding:3px 10px;border-radius:30px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.ticker-txt{font-size:13px;color:#fff;font-weight:500}
+.ticker-date{font-size:11px;color:rgba(255,255,255,.7);margin-right:auto;white-space:nowrap}
 
-  /* ===== HOME: SECTIONS ===== */
-  .home-sec { padding: 64px 56px; }
-  .sec-label {
-    font-size: 11px; font-weight: 700; color: var(--or);
-    letter-spacing: .1em; text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .sec-title {
-    font-size: 32px; font-weight: 900; color: white;
-    margin-bottom: 40px; line-height: 1.15;
-  }
+/* HOME SECTIONS */
+.hsec{padding:68px 68px}
+.eyebrow{font-size:12px;font-weight:700;color:var(--or);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.sec-h{font-size:34px;font-weight:900;color:var(--tx);margin-bottom:36px;line-height:1.15}
 
-  /* Activity grid */
-  .act-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    background: var(--dk4);
-  }
-  .act-card { background: var(--dk2); overflow: hidden; cursor: pointer; position: relative; }
-  .act-thumb {
-    height: 220px; overflow: hidden; position: relative;
-  }
-  .act-thumb img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    filter: brightness(.65);
-    transition: transform .5s, filter .3s;
-  }
-  .act-card:hover .act-thumb img { transform: scale(1.05); filter: brightness(.55); }
-  .act-or-bar {
-    position: absolute; top: 0; right: 0;
-    width: 4px; height: 100%;
-    background: var(--or);
-    transform: scaleY(0); transform-origin: top;
-    transition: transform .3s;
-  }
-  .act-card:hover .act-or-bar { transform: scaleY(1); }
-  .act-body { padding: 22px 24px; }
-  .act-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; }
-  .act-desc { font-size: 13px; color: var(--tx2); line-height: 1.65; }
-  .act-more {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 12px; color: var(--or); font-weight: 700;
-    margin-top: 14px; letter-spacing: .03em;
-    text-transform: uppercase;
-  }
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--bg3)}
+.act-card{background:#fff;overflow:hidden;cursor:pointer;position:relative}
+.act-thumb{height:230px;overflow:hidden;position:relative}
+.act-thumb img{width:100%;height:100%;object-fit:cover;filter:brightness(.72);transition:transform .5s,filter .3s}
+.act-card:hover .act-thumb img{transform:scale(1.05);filter:brightness(.6)}
+.act-line{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--or);transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.act-card:hover .act-line{transform:scaleX(1)}
+.act-body{padding:24px 26px}
+.act-title{font-size:19px;font-weight:800;color:var(--tx);margin-bottom:8px}
+.act-desc{font-size:14px;color:var(--tx2);line-height:1.7}
+.act-more{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--or);margin-top:14px;letter-spacing:.04em;text-transform:uppercase}
 
-  /* Dept strip */
-  .dept-strip {
-    display: grid; grid-template-columns: repeat(3,1fr);
-    gap: 1px; background: var(--dk4);
-  }
-  .dept-cell {
-    background: var(--dk3); padding: 32px 28px; text-align: center;
-    border-top: 3px solid transparent;
-    transition: border-color .2s;
-  }
-  .dept-cell:hover { border-top-color: var(--or); }
-  .dept-big { font-size: 52px; font-weight: 900; color: var(--or); line-height: 1; }
-  .dept-name { font-size: 16px; font-weight: 800; color: white; margin: 10px 0 6px; }
-  .dept-desc { font-size: 13px; color: var(--tx2); line-height: 1.6; }
+.dept-row{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--bg3)}
+.dc{background:#fff;padding:34px 28px;text-align:center;border-top:3px solid transparent;transition:border-color .2s}
+.dc:hover{border-top-color:var(--or)}
+.dc-big{font-size:54px;font-weight:900;color:var(--or);line-height:1}
+.dc-name{font-size:16px;font-weight:800;color:var(--tx);margin:10px 0 6px}
+.dc-desc{font-size:13px;color:var(--tx2);line-height:1.65}
 
-  /* Emergency bar */
-  .emer-bar {
-    background: var(--or);
-    padding: 36px 56px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px;
-  }
-  .emer-bar h3 { font-size: 22px; font-weight: 900; color: white; margin-bottom: 5px; }
-  .emer-bar p { font-size: 14px; color: rgba(255,255,255,.8); }
-  .emer-phone {
-    font-size: 34px; font-weight: 900; color: white;
-    letter-spacing: .02em; white-space: nowrap;
-    direction: ltr;
-  }
+.emer{display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--tx);padding:42px 68px}
+.emer h3{font-size:22px;font-weight:900;color:#fff;margin-bottom:5px}
+.emer p{font-size:14px;color:rgba(255,255,255,.55)}
+.emer-phone{font-size:36px;font-weight:900;color:var(--or);direction:ltr;letter-spacing:.02em}
 
-  /* Footer */
-  .footer {
-    background: #080808;
-    padding: 28px 56px;
-    border-top: 1px solid var(--bd);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .footer-copy { font-size: 12px; color: var(--tx3); }
-  .footer-links { display: flex; gap: 20px; }
-  .footer-link { font-size: 12px; color: var(--tx3); cursor: pointer; text-decoration: none; }
-  .footer-link:hover { color: var(--or); }
+.footer{background:#fff;border-top:1px solid var(--bd);padding:22px 68px;display:flex;align-items:center;justify-content:space-between}
+.footer-copy{font-size:12px;color:var(--tx3)}
+.footer-links{display:flex;gap:18px}
+.fl{font-size:12px;color:var(--tx3);cursor:pointer;text-decoration:none;transition:color .18s}
+.fl:hover{color:var(--or)}
 
-  /* ===== ADMIN ===== */
-  .admin-header {
-    background: var(--or);
-    padding: 18px 40px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .admin-header svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
-  .admin-header-text strong { display: block; font-size: 17px; font-weight: 800; color: white; }
-  .admin-header-text span { font-size: 12px; color: rgba(255,255,255,.8); }
+/* ============================
+   ADMIN
+============================ */
+.admin-shell{background:var(--bg2);min-height:calc(100vh - 66px)}
+.admin-bar{background:#fff;border-bottom:1px solid var(--bd);padding:0 36px;display:flex;align-items:center;gap:0}
+.atab{height:52px;padding:0 18px;font-size:13px;font-weight:600;color:var(--tx2);border:none;background:none;cursor:pointer;font-family:inherit;border-bottom:2.5px solid transparent;transition:all .18s;white-space:nowrap}
+.atab:hover{color:var(--tx)}
+.atab.active{color:var(--or);border-bottom-color:var(--or)}
+.abody{padding:28px 36px}
+.asec{display:none}
+.asec.active{display:block}
 
-  .admin-tabs {
-    display: flex; gap: 0;
-    border-bottom: 1px solid var(--bd);
-    padding: 0 40px;
-    background: var(--dk2);
-  }
-  .atab {
-    padding: 14px 20px;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer;
-    border: none; background: none;
-    font-family: inherit;
-    color: var(--tx2);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all .2s;
-  }
-  .atab:hover { color: white; }
-  .atab.active { color: var(--or); border-bottom-color: var(--or); }
+/* Generic card */
+.card{background:#fff;border:1px solid var(--bd);border-radius:var(--rl);box-shadow:var(--sh)}
+.card-p{padding:22px 26px}
 
-  .admin-body { padding: 32px 40px; background: var(--dk2); min-height: calc(100vh - 200px); }
-  .asec { display: none; }
-  .asec.active { display: block; }
+/* Toolbar */
+.tb-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.tb-title{font-size:19px;font-weight:800;color:var(--tx)}
+.tb-actions{display:flex;gap:10px}
 
-  /* Admin toolbar */
-  .admin-toolbar {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .admin-toolbar h2 { font-size: 18px; font-weight: 800; color: white; }
-  .abtn {
-    padding: 9px 18px;
-    background: var(--or); color: white;
-    border: none; border-radius: 3px;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer; font-family: inherit;
-    transition: background .2s;
-  }
-  .abtn:hover { background: var(--or2); }
-  .abtn-ghost {
-    background: transparent; color: var(--tx2);
-    border: 1px solid var(--bd2);
-  }
-  .abtn-ghost:hover { border-color: var(--or); color: white; background: transparent; }
+/* Btn */
+.btn{padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-p{background:var(--or);color:#fff}
+.btn-p:hover{background:var(--or2)}
+.btn-s{background:#fff;color:var(--tx);border:1.5px solid var(--bd)}
+.btn-s:hover{border-color:var(--bd2);background:var(--bg2)}
+.btn-g{background:none;color:var(--tx2);border:1.5px solid var(--bd)}
+.btn-g:hover{border-color:var(--or);color:var(--or);background:var(--or-lt)}
+.btn-sm{padding:6px 14px;font-size:12px}
 
-  /* Search / filters */
-  .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-  .finput {
-    padding: 9px 14px;
-    background: var(--dk3); color: white;
-    border: 1px solid var(--bd); border-radius: 3px;
-    font-family: inherit; font-size: 13px;
-  }
-  .finput:focus { outline: none; border-color: var(--or); }
-  .fsel {
-    padding: 9px 14px;
-    background: var(--dk3); color: white;
-    border: 1px solid var(--bd); border-radius: 3px;
-    font-family: inherit; font-size: 13px; cursor: pointer;
-  }
+/* Filters */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.fi{padding:9px 13px;border:1.5px solid var(--bd);border-radius:var(--r);background:#fff;color:var(--tx);font-family:inherit;font-size:13px;transition:border-color .18s}
+.fi:focus{outline:none;border-color:var(--or)}
 
-  /* Events */
-  .ev-list { display: flex; flex-direction: column; gap: 12px; }
-  .ev-card {
-    background: var(--dk3);
-    border: 1px solid var(--bd);
-    border-right: 3px solid var(--bd);
-    border-radius: 3px;
-    padding: 20px 22px;
-    transition: border-right-color .2s;
-  }
-  .ev-card.ev-active { border-right-color: var(--or); }
-  .ev-card:hover { border-right-color: var(--or3); }
-  .ev-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
-  .ev-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 4px; }
-  .ev-date { font-size: 12px; color: var(--tx3); }
-  .ev-badge {
-    font-size: 11px; font-weight: 700;
-    padding: 4px 12px; border-radius: 2px;
-    letter-spacing: .04em; text-transform: uppercase;
-  }
-  .eb-done { background: rgba(255,255,255,.07); color: var(--tx2); }
-  .eb-plan { background: rgba(232,101,10,.15); color: var(--or); }
-  .eb-open { background: rgba(99,153,34,.15); color: #acd36a; }
-  .ev-stats { display: flex; gap: 24px; margin-bottom: 14px; }
-  .ev-stat { font-size: 13px; color: var(--tx3); }
-  .ev-stat strong { color: white; font-weight: 700; }
-  .ev-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .chip {
-    font-size: 12px; font-weight: 600;
-    padding: 4px 12px; border-radius: 2px;
-  }
-  .chip-r { background: rgba(232,101,10,.15); color: var(--or3); }
-  .chip-l { background: rgba(186,117,23,.15); color: #EF9F27; }
-  .chip-c { background: var(--bd); color: var(--tx2); }
-  .ev-actions { display: flex; gap: 8px; padding-top: 14px; border-top: 1px solid var(--bd); }
-  .ev-btn {
-    padding: 7px 16px;
-    border-radius: 3px; font-size: 12px; font-weight: 700;
-    cursor: pointer; font-family: inherit; border: none;
-    background: var(--or); color: white;
-    transition: background .2s;
-  }
-  .ev-btn:hover { background: var(--or2); }
-  .ev-btn-ghost {
-    background: transparent; color: var(--tx2);
-    border: 1px solid var(--bd2);
-  }
-  .ev-btn-ghost:hover { border-color: var(--or); color: white; }
+/* Event cards */
+.ev-list{display:flex;flex-direction:column;gap:12px}
+.ev-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rl);border-right:4px solid var(--bd);padding:20px 24px;box-shadow:var(--sh);transition:all .2s}
+.ev-card.ev-hot{border-right-color:var(--or)}
+.ev-card:hover{box-shadow:var(--sh-md)}
+.ev-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.ev-name{font-size:16px;font-weight:800;color:var(--tx);margin-bottom:3px}
+.ev-date{font-size:12px;color:var(--tx3);font-weight:500}
+.ev-badge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:30px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.eb-plan{background:#fff3e0;color:#e65100}
+.eb-done{background:var(--bg3);color:var(--tx3)}
+.ev-stats-row{display:flex;gap:22px;margin-bottom:12px}
+.ev-s{font-size:13px;color:var(--tx3)}
+.ev-s strong{color:var(--tx);font-weight:700}
+.ev-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-size:12px;font-weight:600;padding:4px 12px;border-radius:30px}
+.chip-r{background:var(--or-lt);color:var(--or)}
+.chip-l{background:#fff8e1;color:#e65100}
+.chip-c{background:var(--bg2);color:var(--tx2)}
+.ev-actions{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--bd)}
 
-  /* New event form */
-  .new-ev-form {
-    background: var(--dk4);
-    border: 1px solid var(--bd);
-    border-right: 3px solid var(--or);
-    border-radius: 3px;
-    padding: 24px;
-    margin-bottom: 20px;
-    display: none;
-  }
-  .new-ev-form.visible { display: block; }
-  .nef-title { font-size: 15px; font-weight: 800; color: white; margin-bottom: 18px; }
-  .nef-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .nef-full { margin-bottom: 14px; }
-  .nef-label { display: block; font-size: 11px; font-weight: 700; color: var(--tx3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 5px; }
-  .nef-input {
-    width: 100%; padding: 9px 13px;
-    background: var(--dk2); color: white;
-    border: 1px solid var(--bd); border-radius: 3px;
-    font-family: inherit; font-size: 13px;
-  }
-  .nef-input:focus { outline: none; border-color: var(--or); }
-  .cb-group { display: flex; gap: 14px; flex-wrap: wrap; }
-  .cb-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--tx2); cursor: pointer; }
-  .cb-item input { accent-color: var(--or); width: 15px; height: 15px; }
-  .nef-footer { display: flex; gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--bd); }
+/* New event form */
+.nef{background:#fff;border:1px solid var(--bd);border-radius:var(--rl);border-top:3px solid var(--or);padding:26px;margin-bottom:18px;box-shadow:var(--sh);display:none}
+.nef.open{display:block}
+.nef-h{font-size:15px;font-weight:800;color:var(--tx);margin-bottom:18px}
+.nef-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.fld input,.fld select,.fld textarea{width:100%;padding:10px 13px;border:1.5px solid var(--bd);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--tx);background:#fff;transition:border-color .18s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--or)}
+.fld-full{margin-bottom:14px}
+.fld-full label{display:block;font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
 
-  /* Attendance modal overlay */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.75);
-    z-index: 2000;
-    display: none;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 80px 20px 20px;
-    overflow-y: auto;
-  }
-  .modal-overlay.visible { display: flex; }
-  .modal {
-    background: var(--dk2);
-    border: 1px solid var(--bd2);
-    border-top: 3px solid var(--or);
-    border-radius: 4px;
-    width: 100%; max-width: 860px;
-    padding: 28px 32px;
-  }
-  .modal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  .modal-title { font-size: 18px; font-weight: 800; color: white; }
-  .modal-close {
-    width: 32px; height: 32px; border-radius: 3px;
-    background: var(--dk3); border: 1px solid var(--bd);
-    color: var(--tx2); font-size: 18px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
-  }
-  .modal-close:hover { border-color: var(--or); color: white; }
-  .modal-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--bd); margin-bottom: 20px; }
-  .mtab {
-    padding: 10px 18px; font-size: 13px; font-weight: 600;
-    cursor: pointer; border: none; background: none;
-    font-family: inherit; color: var(--tx2);
-    border-bottom: 2px solid transparent; margin-bottom: -1px;
-    transition: all .2s;
-  }
-  .mtab.active { color: var(--or); border-bottom-color: var(--or); }
-  .msec { display: none; }
-  .msec.active { display: block; }
+/* CB row */
+.cb-row{display:flex;gap:14px;flex-wrap:wrap}
+.cb-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--tx);cursor:pointer}
+.cb-item input{accent-color:var(--or);width:15px;height:15px}
 
-  /* Attendance list */
-  .att-stats { display: flex; gap: 16px; margin-bottom: 20px; }
-  .att-stat { background: var(--dk3); border-radius: 3px; padding: 12px 18px; text-align: center; flex: 1; }
-  .att-stat-n { font-size: 24px; font-weight: 900; color: var(--or); }
-  .att-stat-l { font-size: 11px; color: var(--tx3); margin-top: 2px; }
-  .att-list { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; }
-  .att-item {
-    display: flex; align-items: center; gap: 14px;
-    background: var(--dk3); border: 1px solid var(--bd);
-    border-radius: 3px; padding: 11px 14px;
-    transition: border-color .2s;
-  }
-  .att-item:hover { border-color: var(--bd2); }
-  .att-av {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: var(--or); color: white;
-    font-size: 12px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .att-name { font-size: 14px; font-weight: 700; color: white; flex: 1; }
-  .att-role { font-size: 11px; color: var(--tx3); }
-  .att-dept { font-size: 11px; color: var(--tx3); min-width: 90px; }
-  .att-toggle {
-    display: flex; gap: 0;
-    border: 1px solid var(--bd2); border-radius: 3px; overflow: hidden;
-  }
-  .att-btn {
-    padding: 5px 12px; font-size: 12px; font-weight: 700;
-    cursor: pointer; border: none; font-family: inherit;
-    background: var(--dk2); color: var(--tx2);
-    transition: all .15s;
-  }
-  .att-btn.present { background: rgba(99,153,34,.2); color: #acd36a; }
-  .att-btn.absent { background: rgba(232,101,10,.15); color: var(--or); }
+/* Material grid */
+.mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mat-glabel{font-size:11px;font-weight:700;color:var(--or);letter-spacing:.06em;text-transform:uppercase;margin:12px 0 4px;grid-column:1/-1}
+.mat-glabel:first-child{margin-top:0}
+.mat-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1.5px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all .18s;background:#fff;user-select:none}
+.mat-item:hover:not(.mat-dis){border-color:var(--or);background:var(--or-lt)}
+.mat-item.mat-sel{border-color:var(--or);background:var(--or-lt)}
+.mat-item.mat-dis{opacity:.4;cursor:not-allowed}
+.mat-item input[type=checkbox]{accent-color:var(--or);width:15px;height:15px;flex-shrink:0}
+.mat-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.mat-dot.g{background:#43a047}.mat-dot.a{background:#fb8c00}.mat-dot.r{background:#e53935}
+.mat-lbl{font-size:13px;font-weight:600;color:var(--tx);flex:1}
+.mat-st{font-size:11px;color:var(--tx3)}
 
-  /* Teams builder */
-  .teams-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .team-card {
-    background: var(--dk3); border: 1px solid var(--bd); border-radius: 3px; padding: 16px;
-  }
-  .team-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .team-card-title { font-size: 14px; font-weight: 800; color: white; }
-  .team-members { display: flex; flex-direction: column; gap: 6px; }
-  .team-member {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--dk2); border-radius: 3px; padding: 8px 10px;
-    font-size: 13px; color: var(--tx2);
-  }
-  .tm-av {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--or); color: white; font-size: 10px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .tm-role { font-size: 11px; color: var(--tx3); margin-right: auto; }
-  .add-member-btn {
-    width: 100%; margin-top: 8px; padding: 7px;
-    background: var(--orlt); color: var(--or);
-    border: 1px dashed rgba(232,101,10,.4); border-radius: 3px;
-    font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
-    transition: all .2s;
-  }
-  .add-member-btn:hover { background: rgba(232,101,10,.2); }
+/* Table */
+.tbl-wrap{overflow-x:auto;border-radius:var(--rl);border:1px solid var(--bd);box-shadow:var(--sh)}
+table{width:100%;border-collapse:collapse;background:#fff;table-layout:fixed}
+thead th{padding:10px 15px;text-align:right;font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;background:var(--bg2);border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody td{padding:12px 15px;font-size:13px;color:var(--tx);border-bottom:1px solid var(--bd)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--bg2)}
+.rbg{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:30px}
+.r-cmd{background:#fff3e0;color:#bf360c}
+.r-dep{background:#fce4ec;color:#880e4f}
+.r-tm{background:#e3f2fd;color:#0d47a1}
+.r-rg{background:var(--bg2);color:var(--tx2)}
+.sbg{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:30px}
+.s-on{background:#e8f5e9;color:#2e7d32}
+.s-off{background:#fff8e1;color:#e65100}
+.dbg{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:30px;background:var(--bg2);color:var(--tx2)}
+.ibtn{width:28px;height:28px;border-radius:var(--r);border:1.5px solid var(--bd);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--tx3);transition:all .18s}
+.ibtn:hover{border-color:var(--or);color:var(--or);background:var(--or-lt)}
 
-  /* Members table */
-  .mtable-wrap { overflow-x: auto; }
-  .mtable {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-  }
-  .mtable th {
-    padding: 11px 14px;
-    text-align: right;
-    font-size: 11px; font-weight: 700; color: var(--tx3);
-    letter-spacing: .05em; text-transform: uppercase;
-    background: var(--dk3);
-    border-bottom: 1px solid var(--bd);
-    white-space: nowrap;
-  }
-  .mtable td {
-    padding: 11px 14px;
-    font-size: 13px; color: white;
-    border-bottom: 1px solid rgba(255,255,255,.04);
-    vertical-align: middle;
-  }
-  .mtable tr:last-child td { border-bottom: none; }
-  .mtable tr:hover td { background: rgba(255,255,255,.025); }
-  .rbg { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 2px; font-weight: 700; }
-  .r-cmd { background: rgba(232,101,10,.2); color: var(--or); }
-  .r-dep { background: rgba(232,101,10,.1); color: var(--or3); }
-  .r-tm  { background: rgba(24,95,165,.2); color: #85B7EB; }
-  .r-rg  { background: rgba(255,255,255,.08); color: var(--tx2); }
-  .dbg { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 2px; background: rgba(255,255,255,.07); color: var(--tx2); font-weight: 600; }
-  .sbg { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 2px; font-weight: 700; }
-  .s-on  { background: rgba(99,153,34,.15); color: #acd36a; }
-  .s-off { background: rgba(186,117,23,.15); color: #EF9F27; }
-  .ibtn {
-    width: 28px; height: 28px; border-radius: 3px;
-    border: 1px solid var(--bd); background: none;
-    cursor: pointer; font-size: 13px; color: var(--tx3);
-    display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
-  }
-  .ibtn:hover { border-color: var(--or); color: var(--or); background: rgba(232,101,10,.07); }
+/* Equipment */
+.eq-sec-lbl{font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.07em;text-transform:uppercase;margin:22px 0 10px}
+.eq-sec-lbl:first-child{margin-top:0}
+.eq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.eq-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--sh);transition:box-shadow .2s}
+.eq-card:hover{box-shadow:var(--sh-md)}
+.eq-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.eq-name{font-size:15px;font-weight:800;color:var(--tx)}
+.eq-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:30px;background:var(--or-lt);color:var(--or)}
+.eq-st{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);margin-bottom:7px}
+.sdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dot-g{background:#43a047}.dot-a{background:#fb8c00}.dot-r{background:#e53935}
+.eq-meta{font-size:11px;color:var(--tx3)}
+.eq-ev{font-size:11px;color:var(--or);margin-top:3px}
 
-  /* Equipment */
-  .eq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .eq-card {
-    background: var(--dk3); border: 1px solid var(--bd);
-    border-radius: 3px; padding: 18px;
-    transition: border-color .2s;
-  }
-  .eq-card:hover { border-color: var(--bd2); }
-  .eq-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
-  .eq-name { font-size: 15px; font-weight: 800; color: white; }
-  .eq-grp {
-    font-size: 10px; font-weight: 700; color: var(--or);
-    background: var(--orlt); padding: 3px 8px; border-radius: 2px;
-    letter-spacing: .04em;
-  }
-  .eq-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tx2); margin-bottom: 10px; }
-  .sdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-  .dot-g { background: #639922; }
-  .dot-a { background: #BA7517; }
-  .dot-r { background: var(--or); }
-  .eq-last { font-size: 11px; color: var(--tx3); }
-  .eq-event { font-size: 11px; color: var(--or3); margin-top: 3px; }
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:72px 20px 20px;overflow-y:auto;backdrop-filter:blur(3px)}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:860px;box-shadow:0 24px 64px rgba(0,0,0,.18);border-top:3px solid var(--or)}
+.modal-sm{max-width:520px}
+.mhdr{display:flex;align-items:center;justify-content:space-between;padding:22px 26px 0}
+.mhdr-t{font-size:17px;font-weight:800;color:var(--tx)}
+.mclose{width:32px;height:32px;border-radius:var(--r);border:1.5px solid var(--bd);background:none;cursor:pointer;font-size:18px;color:var(--tx2);display:flex;align-items:center;justify-content:center;transition:all .18s}
+.mclose:hover{border-color:var(--or);color:var(--or);background:var(--or-lt)}
+.mbody{padding:18px 26px 26px}
+.mtabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:18px}
+.mtab{padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;font-family:inherit;color:var(--tx2);border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:all .18s}
+.mtab:hover{color:var(--tx)}
+.mtab.active{color:var(--or);border-bottom-color:var(--or)}
+.msec{display:none}.msec.active{display:block}
 
-  /* Add member modal */
-  .modal-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .mfg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
-  .mfl { font-size: 11px; font-weight: 700; color: var(--tx3); letter-spacing: .04em; text-transform: uppercase; }
-  .mfi {
-    padding: 9px 13px; background: var(--dk3); color: white;
-    border: 1px solid var(--bd); border-radius: 3px;
-    font-family: inherit; font-size: 13px;
-  }
-  .mfi:focus { outline: none; border-color: var(--or); }
+/* Attendance */
+.att-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.att-st{background:var(--bg2);border-radius:var(--r);padding:14px;text-align:center}
+.att-st-n{font-size:26px;font-weight:900;color:var(--or)}
+.att-st-l{font-size:11px;color:var(--tx3);margin-top:3px}
+.att-list{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto}
+.att-row{display:flex;align-items:center;gap:13px;padding:10px 13px;border:1.5px solid var(--bd);border-radius:var(--r);background:#fff;transition:border-color .18s}
+.att-row:hover{border-color:var(--bd2)}
+.att-av{width:34px;height:34px;border-radius:50%;background:var(--or);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.att-name{font-size:14px;font-weight:700;color:var(--tx);flex:1}
+.att-role{font-size:11px;color:var(--tx3)}
+.att-dept{font-size:11px;color:var(--tx3);min-width:76px}
+.tgl-wrap{display:flex;border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.tgl{padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:inherit;background:#fff;color:var(--tx2);transition:all .15s}
+.tgl:first-child{border-left:1px solid var(--bd)}
+.tgl.on{background:#e8f5e9;color:#2e7d32}
+.tgl.off{background:#fff3e0;color:#e65100}
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--dk2); }
-  ::-webkit-scrollbar-thumb { background: var(--dk5); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--or); }
+/* DRAG & DROP TEAMS */
+.teams-layout{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start}
+.pool-box{background:var(--bg2);border:1.5px solid var(--bd);border-radius:var(--rl);padding:14px}
+.pool-title{font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.pool-list,.team-drop{display:flex;flex-direction:column;gap:6px;min-height:44px}
+.team-drop{border:2px dashed var(--bd);border-radius:var(--r);padding:8px;transition:all .18s}
+.team-drop.drag-over{border-color:var(--or);background:var(--or-lt)}
+.team-cols{display:flex;flex-direction:column;gap:12px}
+.team-card{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rl);padding:14px;box-shadow:var(--sh)}
+.team-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.team-name{font-size:14px;font-weight:800;color:var(--tx)}
+.team-cnt{font-size:12px;color:var(--tx3)}
+.drag-chip{display:flex;align-items:center;gap:9px;padding:9px 11px;background:#fff;border:1.5px solid var(--bd);border-radius:var(--r);cursor:grab;user-select:none;transition:all .18s}
+.drag-chip:hover{border-color:var(--bd2);box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.drag-chip.dragging{opacity:.4;cursor:grabbing}
+.drag-chip.in-team{background:var(--bg2)}
+.dc-av{width:28px;height:28px;border-radius:50%;background:var(--or);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dc-name{font-size:13px;font-weight:600;color:var(--tx);flex:1}
+.dc-role{font-size:11px;color:var(--tx3)}
+.dc-handle{color:var(--tx3);font-size:15px;margin-right:2px}
+.dc-rm{width:18px;height:18px;border-radius:3px;border:none;background:none;cursor:pointer;color:var(--tx3);font-size:14px;display:flex;align-items:center;justify-content:center;transition:color .15s;padding:0}
+.dc-rm:hover{color:#e53935}
+
+/* Add member / CSV */
+.mfg{margin-bottom:14px}
+.mfg label{display:block;font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.mfg input,.mfg select,.mfg textarea{width:100%;padding:10px 13px;border:1.5px solid var(--bd);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--tx);background:#fff;transition:border-color .18s}
+.mfg input:focus,.mfg select:focus,.mfg textarea:focus{outline:none;border-color:var(--or)}
+.mfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.csv-zone{border:2px dashed var(--bd2);border-radius:var(--rl);padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.csv-zone:hover,.csv-zone.drag{border-color:var(--or);background:var(--or-lt)}
+.csv-icon{font-size:30px;margin-bottom:8px}
+.csv-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.csv-sub{font-size:13px;color:var(--tx2)}
+.csv-tpl{font-size:12px;color:var(--or);cursor:pointer;margin-top:8px;font-weight:700;display:inline-block}
+.csv-preview{display:none;background:var(--bg2);border-radius:var(--r);padding:14px;margin-top:12px;font-size:12px;color:var(--tx2)}
+.csv-preview.show{display:block}
+.csv-ok{color:#2e7d32;font-weight:700;margin-bottom:6px}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--or)}
 </style>
 </head>
 <body>
 
-<!-- ====== NAV ====== -->
+<!-- NAV -->
 <nav class="nav">
   <div class="nav-brand">
-    <div class="logo-unit">
-      <img src="https://tse4.mm.bing.net/th/id/OIP.EfMk8wlbRKB3hhio8TDiAgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
-           alt="לוגו יחידת חילוץ רעננה"
-           onerror="this.style.display='none'">
+    <div class="logo-box">
+      <img src="https://tse4.mm.bing.net/th/id/OIP.EfMk8wlbRKB3hhio8TDiAgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="לוגו" onerror="this.style.display='none'">
     </div>
-    <div class="nav-sep"></div>
+    <div class="vsep"></div>
     <div class="city-logo">
-      <div class="city-shield">
-        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-      </div>
-      <div class="city-label">עיריית רעננה</div>
+      <div class="city-dot"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+      <div class="city-lbl">עיריית רעננה</div>
     </div>
-    <div class="nav-sep"></div>
-    <div class="unit-text">
-      <div class="unit-name">יחידת חילוץ רעננה</div>
-      <div class="unit-sub">מערכת ניהול פנימית</div>
-    </div>
+    <div class="vsep"></div>
+    <div><div class="brand-name">יחידת חילוץ רעננה</div><div class="brand-sub">מערכת ניהול פנימית</div></div>
   </div>
-
   <div class="nav-links">
-    <button class="nav-link active" onclick="showPage('home')">בית</button>
-    <button class="nav-link" onclick="showPage('admin')">ניהול</button>
-    <button class="nav-link" onclick="showPage('home')">הכשרה</button>
-    <button class="nav-link" onclick="showPage('home')">ארכיון</button>
-    <button class="nav-link" onclick="showPage('home')">עיתונות</button>
-    <button class="nav-link" onclick="showPage('home')">אודות</button>
-    <button class="nav-link" onclick="showPage('home')">התנדבות</button>
-    <button class="nav-link" onclick="showPage('home')">צור קשר</button>
+    <button class="nl active" onclick="showPage('home')">בית</button>
+    <button class="nl" onclick="showPage('home')">אודות</button>
+    <button class="nl" onclick="showPage('home')">הכשרה</button>
+    <button class="nl" onclick="showPage('home')">ארכיון</button>
+    <button class="nl" onclick="showPage('home')">עיתונות</button>
+    <button class="nl" onclick="showPage('home')">התנדבות</button>
+    <button class="nl" onclick="showPage('home')">צור קשר</button>
+    <button class="nl nl-admin" onclick="showPage('admin')">ניהול ›</button>
   </div>
-
-  <div class="nav-social">
-    <a class="nsoc" href="https://www.instagram.com/" target="_blank" title="Instagram">
+  <div class="nav-right">
+    <a class="soc" href="https://instagram.com" target="_blank" title="Instagram">
       <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
     </a>
-    <a class="nsoc" href="https://www.facebook.com/" target="_blank" title="Facebook">
+    <a class="soc" href="https://facebook.com" target="_blank" title="Facebook">
       <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
     </a>
   </div>
 </nav>
 
-<!-- ====== HOME ====== -->
+<!-- HOME -->
 <div class="page active" id="page-home">
-
-  <!-- Hero -->
   <div class="hero">
-    <div class="hero-bg">
-      <img
-        src="https://www.tzomet-ran.co.il/wp-content/uploads/2017/09/TR-H-C-%D7%AA%D7%A8%D7%92%D7%99%D7%9C-%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%97%D7%99%D7%9C%D7%95%D7%A5-%D7%A6%D7%99-768x509.jpg"
-        alt="תרגיל חילוץ יחידת רעננה"
-        onerror="this.src='https://fra1.digitaloceanspaces.com/inhasharon.co.il/2019/02/%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%9E%D7%AA%D7%A0%D7%93%D7%91%D7%99%D7%9D-2.jpg'; this.onerror=null;">
-    </div>
-    <div class="hero-grad"></div>
-    <div class="hero-stripe"></div>
+    <img class="bg" src="https://www.tzomet-ran.co.il/wp-content/uploads/2017/09/TR-H-C-%D7%AA%D7%A8%D7%92%D7%99%D7%9C-%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%97%D7%99%D7%9C%D7%95%D7%A5-%D7%A6%D7%99-768x509.jpg" alt="תרגיל חילוץ" onerror="this.src='https://fra1.digitaloceanspaces.com/inhasharon.co.il/2019/02/%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%9E%D7%AA%D7%A0%D7%93%D7%91%D7%99%D7%9D-2.jpg';this.onerror=null">
+    <div class="hero-fade"></div>
+    <div class="hero-bar"></div>
     <div class="hero-content">
-      <div class="hero-badge">
-        <span class="hero-dot"></span>
-        יחידת חילוץ עירונית · רעננה
-      </div>
+      <div class="hero-pill"><span class="dot-pulse"></span>יחידת חילוץ עירונית · רעננה</div>
       <h1>מוכנות לכל שעה.<br><em>חילוץ בכל תרחיש.</em></h1>
-      <p class="hero-desc">
-        מתנדבים מקצועיים המוכנים לפעול בכל אירוע חירום —
-        מרעידת אדמה ועד פגיעת טיל. אנחנו כאן כדי להציל חיים.
-      </p>
+      <p>מתנדבים מקצועיים המוכנים לפעול בכל אירוע חירום — מרעידת אדמה ועד פגיעת טיל. אנחנו כאן כדי להציל חיים.</p>
       <div class="hero-btns">
-        <button class="btn-or" onclick="showPage('admin')">כניסה לניהול</button>
-        <button class="btn-ghost">אודות היחידה</button>
+        <button class="btn-fill" onclick="showPage('admin')">כניסה לניהול</button>
+        <button class="btn-out">אודות היחידה</button>
       </div>
     </div>
   </div>
-
-  <!-- Stats bar -->
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-n">48+</div>
-      <div class="stat-l">מתנדבים פעילים</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-n">3</div>
-      <div class="stat-l">קבוצות חילוץ</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-n">24/7</div>
-      <div class="stat-l">מוכנות מבצעית</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-n">12+</div>
-      <div class="stat-l">תרגילים בשנה</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-n">9</div>
-      <div class="stat-l">כלי ציוד מבצעיים</div>
-    </div>
+  <div class="stats">
+    <div class="si"><div class="si-n">48+</div><div class="si-l">מתנדבים פעילים</div></div>
+    <div class="si"><div class="si-n">3</div><div class="si-l">קבוצות חילוץ</div></div>
+    <div class="si"><div class="si-n">24/7</div><div class="si-l">מוכנות מבצעית</div></div>
+    <div class="si"><div class="si-n">12+</div><div class="si-l">תרגילים בשנה</div></div>
+    <div class="si"><div class="si-n">9</div><div class="si-l">כלי ציוד מבצעיים</div></div>
   </div>
-
-  <!-- Ticker -->
   <div class="ticker">
-    <span class="ticker-tag">עדכון אחרון</span>
-    <span class="ticker-text">תרגיל ינואר 2025 הסתיים בהצלחה — 34 מתנדבים, 3 קבוצות, 6 תרחישים שונים</span>
+    <span class="ticker-tag">עדכון</span>
+    <span class="ticker-txt">תרגיל ינואר 2025 הסתיים בהצלחה — 34 מתנדבים, 3 קבוצות, 6 תרחישים שונים</span>
     <span class="ticker-date">ינואר 2025</span>
   </div>
-
-  <!-- Activity -->
-  <div class="home-sec" style="background: #141414; padding-bottom: 0;">
-    <div class="sec-label">פעילות היחידה</div>
-    <div class="sec-title">תחומי ההתמחות שלנו</div>
+  <div class="hsec">
+    <div class="eyebrow">פעילות היחידה</div>
+    <div class="sec-h">תחומי ההתמחות שלנו</div>
     <div class="act-grid">
       <div class="act-card">
-        <div class="act-thumb">
-          <img src="https://fra1.digitaloceanspaces.com/inhasharon.co.il/2019/02/%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%9E%D7%AA%D7%A0%D7%93%D7%91%D7%99%D7%9D-2.jpg"
-               alt="חילוץ מהריסות"
-               onerror="this.style.display='none'; this.parentElement.style.background='#1e1e1e'">
-          <div class="act-or-bar"></div>
-        </div>
-        <div class="act-body">
-          <div class="act-title">חילוץ מהריסות</div>
-          <div class="act-desc">איתור וחילוץ נפגעים מתחת להריסות מבנים בעקבות רעידות אדמה ופגיעות טילים. עבודה שיטתית ומקצועית להצלת חיים.</div>
-          <div class="act-more">קרא עוד ←</div>
-        </div>
+        <div class="act-thumb"><img src="https://fra1.digitaloceanspaces.com/inhasharon.co.il/2019/02/%D7%99%D7%97%D7%99%D7%93%D7%AA-%D7%9E%D7%AA%D7%A0%D7%93%D7%91%D7%99%D7%9D-2.jpg" alt="" onerror="this.parentElement.style.background='#e8e8e6'"><div class="act-line"></div></div>
+        <div class="act-body"><div class="act-title">חילוץ מהריסות</div><div class="act-desc">איתור וחילוץ נפגעים מתחת להריסות מבנים בעקבות רעידות אדמה ופגיעות טילים. עבודה שיטתית ומקצועית להצלת חיים.</div><div class="act-more">קרא עוד →</div></div>
       </div>
       <div class="act-card">
-        <div class="act-thumb">
-          <img src="https://hitnadvut.kfar-saba.muni.il/wp-content/uploads/2020/09/image007.jpg"
-               alt="ניהול אוכלוסייה"
-               onerror="this.style.display='none'; this.parentElement.style.background='#1e1e1e'">
-          <div class="act-or-bar"></div>
-        </div>
-        <div class="act-body">
-          <div class="act-title">ניהול אוכלוסייה ולוגיסטיקה</div>
-          <div class="act-desc">פינוי ותמיכה לתושבים באזורי אסון, ניהול ציוד מבצעי, ותיאום מלא עם כל גורמי החירום העירוניים.</div>
-          <div class="act-more">קרא עוד ←</div>
-        </div>
+        <div class="act-thumb"><img src="https://hitnadvut.kfar-saba.muni.il/wp-content/uploads/2020/09/image007.jpg" alt="" onerror="this.parentElement.style.background='#e8e8e6'"><div class="act-line"></div></div>
+        <div class="act-body"><div class="act-title">ניהול אוכלוסייה ולוגיסטיקה</div><div class="act-desc">פינוי ותמיכה לתושבים באזורי אסון, ניהול ציוד מבצעי ותיאום עם כל גורמי החירום העירוניים.</div><div class="act-more">קרא עוד →</div></div>
       </div>
     </div>
   </div>
-
-  <!-- Depts -->
-  <div class="dept-strip">
-    <div class="dept-cell">
-      <div class="dept-big">3</div>
-      <div class="dept-name">קבוצות מחלצים</div>
-      <div class="dept-desc">כל קבוצה עם נגרר א׳, נגרר ב׳ ומערכת תאורה</div>
-    </div>
-    <div class="dept-cell">
-      <div class="dept-big">1</div>
-      <div class="dept-name">חפ"ק לוגיסטיקה</div>
-      <div class="dept-desc">ניהול ציוד, אספקה ותיאום שטח מלא</div>
-    </div>
-    <div class="dept-cell">
-      <div class="dept-big">+</div>
-      <div class="dept-name">אוכלוסייה</div>
-      <div class="dept-desc">ניהול אזרחים ופינוי בזמן אירוע חירום</div>
-    </div>
+  <div class="dept-row">
+    <div class="dc"><div class="dc-big">3</div><div class="dc-name">קבוצות מחלצים</div><div class="dc-desc">כל קבוצה עם נגרר א׳, נגרר ב׳ ותאורה</div></div>
+    <div class="dc"><div class="dc-big">1</div><div class="dc-name">חפ"ק לוגיסטיקה</div><div class="dc-desc">ניהול ציוד, אספקה ותיאום שטח</div></div>
+    <div class="dc"><div class="dc-big">+</div><div class="dc-name">אוכלוסייה</div><div class="dc-desc">ניהול אזרחים בזמן אירוע חירום</div></div>
   </div>
-
-  <!-- Emergency bar -->
-  <div class="emer-bar">
-    <div>
-      <h3>מרכז חירום — זמין 24/7</h3>
-      <p>למקרי חירום בלבד — התקשרות ישירה למפקד הכוננות</p>
-    </div>
+  <div class="emer">
+    <div><h3>מרכז חירום — זמין 24/7</h3><p>למקרי חירום בלבד — התקשרות ישירה למפקד הכוננות</p></div>
     <div class="emer-phone">09-XXX-XXXX</div>
   </div>
-
-  <!-- Footer -->
   <div class="footer">
-    <div class="footer-copy">© 2025 יחידת חילוץ רעננה — כל הזכויות שמורות</div>
+    <div class="footer-copy">© 2025 יחידת חילוץ רעננה</div>
     <div class="footer-links">
-      <a class="footer-link" href="https://github.com/davidelkaim/hilutz-raanana" target="_blank">GitHub</a>
-      <span class="footer-link">אודות</span>
-      <span class="footer-link">צור קשר</span>
-      <span class="footer-link">התנדבות</span>
+      <a class="fl" href="https://github.com/davidelkaim/hilutz-raanana" target="_blank">GitHub</a>
+      <span class="fl">אודות</span><span class="fl">צור קשר</span><span class="fl">התנדבות</span>
     </div>
   </div>
 </div>
 
-<!-- ====== ADMIN ====== -->
+<!-- ADMIN -->
 <div class="page" id="page-admin">
+  <div class="admin-shell">
+    <div class="admin-bar">
+      <button class="atab active" onclick="showAdminTab('events',this)">אירועים</button>
+      <button class="atab" onclick="showAdminTab('members',this)">כוח אדם</button>
+      <button class="atab" onclick="showAdminTab('equip',this)">ציוד</button>
+    </div>
+    <div class="abody">
 
-  <div class="admin-header">
-    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-    <div class="admin-header-text">
-      <strong>אזור ניהול · Admin</strong>
-      <span>גישה מוגבלת לצוות המפקדים בלבד</span>
+      <!-- EVENTS -->
+      <div class="asec active" id="at-events">
+        <div class="tb-row">
+          <div class="tb-title">אירועים ותרגילים</div>
+          <div class="tb-actions">
+            <button class="btn btn-g btn-sm" onclick="openM('modal-att')">נהל נוכחות</button>
+            <button class="btn btn-p" onclick="toggleNEF()">+ אירוע חדש</button>
+          </div>
+        </div>
+        <div class="nef" id="nef">
+          <div class="nef-h">יצירת אירוע חדש</div>
+          <div class="nef-grid">
+            <div class="fld"><label>שם האירוע</label><input placeholder="לדוגמה: תרגיל מרץ 2025"></div>
+            <div class="fld"><label>תאריך ושעה</label><input type="datetime-local"></div>
+            <div class="fld"><label>מיקום</label><input placeholder="כתובת או תיאור המיקום"></div>
+            <div class="fld"><label>סוג</label><select><option>תרגיל</option><option>הכשרה</option><option>אירוע ממשי</option><option>כנס</option></select></div>
+          </div>
+          <div class="fld-full"><label>קבוצות משתתפות</label>
+            <div class="cb-row">
+              <label class="cb-item"><input type="checkbox" checked> קבוצה 1 (מחלצים)</label>
+              <label class="cb-item"><input type="checkbox"> קבוצה 2 (מחלצים)</label>
+              <label class="cb-item"><input type="checkbox"> קבוצה 3 (מחלצים)</label>
+              <label class="cb-item"><input type="checkbox"> חפ"ק</label>
+              <label class="cb-item"><input type="checkbox"> אוכלוסייה</label>
+            </div>
+          </div>
+          <div class="fld-full"><label>ציוד נייד — בחר מהרשימה</label>
+            <div class="mat-grid">
+              <div class="mat-glabel">קבוצה 1</div>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">נגרר א׳</span><span class="mat-st">זמין</span></label>
+              <label class="mat-item mat-dis"><input type="checkbox" disabled><span class="mat-dot a"></span><span class="mat-lbl">נגרר ב׳</span><span class="mat-st">בתחזוקה</span></label>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">תאורה</span><span class="mat-st">זמין</span></label>
+              <div class="mat-glabel">קבוצה 2</div>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">נגרר א׳</span><span class="mat-st">זמין</span></label>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">נגרר ב׳</span><span class="mat-st">זמין</span></label>
+              <label class="mat-item mat-dis"><input type="checkbox" disabled><span class="mat-dot r"></span><span class="mat-lbl">תאורה</span><span class="mat-st">בשימוש</span></label>
+              <div class="mat-glabel">קבוצה 3</div>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">נגרר א׳</span><span class="mat-st">זמין</span></label>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">נגרר ב׳</span><span class="mat-st">זמין</span></label>
+              <label class="mat-item" onclick="toggleMat(this)"><input type="checkbox"><span class="mat-dot g"></span><span class="mat-lbl">תאורה</span><span class="mat-st">זמין</span></label>
+            </div>
+          </div>
+          <div class="nef-grid" style="margin-top:14px">
+            <div class="fld"><label>מספר רכבים</label><input type="number" min="0" placeholder="0"></div>
+            <div class="fld"><label>הערות</label><input placeholder="הערות..."></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <button class="btn btn-p btn-sm" onclick="saveEvent()">שמור אירוע</button>
+            <button class="btn btn-g btn-sm" onclick="toggleNEF()">ביטול</button>
+          </div>
+        </div>
+        <div class="ev-list">
+          <div class="ev-card ev-hot">
+            <div class="ev-top"><div><div class="ev-name">תרגיל מרץ 2025</div><div class="ev-date">20 במרץ 2025 · 19:00 · רעננה</div></div><span class="ev-badge eb-plan">בתכנון</span></div>
+            <div class="ev-stats-row"><div class="ev-s"><strong>28</strong> זמינים</div><div class="ev-s"><strong>—</strong> רכבים</div><div class="ev-s"><strong>0</strong> צוותות</div></div>
+            <div class="ev-chips"><span class="chip chip-r">קבוצה 1</span><span class="chip chip-r">קבוצה 3</span><span class="chip chip-c">אוכלוסייה</span></div>
+            <div class="ev-actions">
+              <button class="btn btn-p btn-sm" onclick="openM('modal-att')">ניהול נוכחות</button>
+              <button class="btn btn-g btn-sm" onclick="openM('modal-teams')">בניית צוותות</button>
+              <button class="btn btn-g btn-sm" onclick="openM('modal-equip-ev')">ציוד לאירוע</button>
+            </div>
+          </div>
+          <div class="ev-card">
+            <div class="ev-top"><div><div class="ev-name">תרגיל ינואר 2025</div><div class="ev-date">15 בינואר 2025 · 08:00</div></div><span class="ev-badge eb-done">הסתיים</span></div>
+            <div class="ev-stats-row"><div class="ev-s"><strong>34</strong> משתתפים</div><div class="ev-s"><strong>8</strong> רכבים</div><div class="ev-s"><strong>3</strong> נגררים</div><div class="ev-s"><strong>6</strong> צוותות</div></div>
+            <div class="ev-chips"><span class="chip chip-r">קבוצה 1</span><span class="chip chip-r">קבוצה 2</span><span class="chip chip-l">חפ"ק</span></div>
+          </div>
+          <div class="ev-card">
+            <div class="ev-top"><div><div class="ev-name">הכשרה מתקדמת — נגרר</div><div class="ev-date">10 בנובמבר 2024 · 16:00</div></div><span class="ev-badge eb-done">הסתיים</span></div>
+            <div class="ev-stats-row"><div class="ev-s"><strong>22</strong> משתתפים</div><div class="ev-s"><strong>4</strong> רכבים</div></div>
+            <div class="ev-chips"><span class="chip chip-r">קבוצה 2</span><span class="chip chip-r">קבוצה 3</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="asec" id="at-members">
+        <div class="tb-row">
+          <div class="tb-title">כוח אדם <span style="font-size:14px;font-weight:500;color:var(--tx3)">— 48 חברים</span></div>
+          <div class="tb-actions">
+            <button class="btn btn-g btn-sm" onclick="openM('modal-csv')">📥 ייבוא CSV</button>
+            <button class="btn btn-p" onclick="openM('modal-add')">+ הוסף חבר</button>
+          </div>
+        </div>
+        <div class="filters">
+          <input class="fi" placeholder="🔍  חיפוש לפי שם..." style="min-width:200px">
+          <select class="fi"><option>כל המחלקות</option><option>מחלצים · קבוצה 1</option><option>מחלצים · קבוצה 2</option><option>מחלצים · קבוצה 3</option><option>חפ"ק</option><option>אוכלוסייה</option></select>
+          <select class="fi"><option>כל הדרגות</option><option>מפקד היחידה</option><option>סגן מפקד היחידה</option><option>מפקד</option><option>מפקד צוות</option><option>רגיל</option></select>
+          <select class="fi"><option>כל הסטטוסים</option><option>פעיל</option><option>לא פעיל</option></select>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th style="width:18%">שם</th><th style="width:20%">מחלקה</th><th style="width:16%">דרגה</th><th style="width:15%">טלפון</th><th style="width:17%">אימייל</th><th style="width:8%">סטטוס</th><th style="width:6%"></th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:700">יוסי כהן</td><td><span class="dbg">קבוצה 1</span></td><td><span class="rbg r-cmd">מפקד היחידה</span></td><td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">054-123-4567</td><td style="color:var(--tx3);font-size:12px">yossi@example.com</td><td><span class="sbg s-on">פעיל</span></td><td><button class="ibtn">✏</button></td></tr>
+              <tr><td style="font-weight:700">מירי לוי</td><td><span class="dbg">חפ"ק</span></td><td><span class="rbg r-dep">סגן מפקד</span></td><td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">052-987-6543</td><td style="color:var(--tx3);font-size:12px">miri@example.com</td><td><span class="sbg s-on">פעיל</span></td><td><button class="ibtn">✏</button></td></tr>
+              <tr><td style="font-weight:700">אלון שמש</td><td><span class="dbg">קבוצה 2</span></td><td><span class="rbg r-tm">מפקד צוות</span></td><td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">050-112-2334</td><td style="color:var(--tx3);font-size:12px">alon@example.com</td><td><span class="sbg s-on">פעיל</span></td><td><button class="ibtn">✏</button></td></tr>
+              <tr><td style="font-weight:700">רונית אברהם</td><td><span class="dbg">אוכלוסייה</span></td><td><span class="rbg r-rg">רגיל</span></td><td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">053-556-6778</td><td style="color:var(--tx3);font-size:12px">ronit@example.com</td><td><span class="sbg s-off">לא פעיל</span></td><td><button class="ibtn">✏</button></td></tr>
+              <tr><td style="font-weight:700">דוד גרין</td><td><span class="dbg">קבוצה 3</span></td><td><span class="rbg r-rg">רגיל</span></td><td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">058-334-4556</td><td style="color:var(--tx3);font-size:12px">david@example.com</td><td><span class="sbg s-on">פעיל</span></td><td><button class="ibtn">✏</button></td></tr>
+              <tr><td style="font-weight:700">נועה ברק</td><td><span class="dbg">קבוצה 1</span></td><td><span class="rbg r-tm">מפקד צוות</span></td><td style="color:var(--tx3);direction:ltr;text-align:right;font-size:12px">054-778-9900</td><td style="color:var(--tx3);font-size:12px">noa@example.com</td><td><span class="sbg s-on">פעיל</span></td><td><button class="ibtn">✏</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--tx3);margin-top:12px;text-align:center">מציג 6 מתוך 48 · <span style="color:var(--or);cursor:pointer;font-weight:600">טען הכל</span></p>
+      </div>
+
+      <!-- EQUIP -->
+      <div class="asec" id="at-equip">
+        <div class="tb-row"><div class="tb-title">ניהול ציוד</div><button class="btn btn-p">+ הוסף פריט</button></div>
+        <div class="eq-sec-lbl">קבוצה 1</div>
+        <div class="eq-grid">
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-tag">קבוצה 1</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: ינואר 2025</div></div>
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-tag">קבוצה 1</span></div><div class="eq-st"><span class="sdot dot-a"></span>בתחזוקה</div><div class="eq-meta">צפוי לחזור: 01/04/2025</div></div>
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-tag">קבוצה 1</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: ינואר 2025</div></div>
+        </div>
+        <div class="eq-sec-lbl">קבוצה 2</div>
+        <div class="eq-grid">
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-tag">קבוצה 2</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: דצמבר 2024</div></div>
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-tag">קבוצה 2</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: נובמבר 2024</div></div>
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-tag">קבוצה 2</span></div><div class="eq-st"><span class="sdot dot-r"></span>בשימוש</div><div class="eq-meta">תרגיל מרץ 2025</div></div>
+        </div>
+        <div class="eq-sec-lbl">קבוצה 3</div>
+        <div class="eq-grid">
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-tag">קבוצה 3</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: ספטמבר 2024</div></div>
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-tag">קבוצה 3</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: אוקטובר 2024</div></div>
+          <div class="eq-card"><div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-tag">קבוצה 3</span></div><div class="eq-st"><span class="sdot dot-g"></span>זמין</div><div class="eq-meta">שימוש אחרון: ספטמבר 2024</div></div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="admin-tabs">
-    <button class="atab active" onclick="showAdminTab('events', this)">אירועים ותרגילים</button>
-    <button class="atab" onclick="showAdminTab('members', this)">כוח אדם</button>
-    <button class="atab" onclick="showAdminTab('equip', this)">ציוד</button>
-  </div>
-
-  <div class="admin-body">
-
-    <!-- TAB: EVENTS -->
-    <div class="asec active" id="at-events">
-      <div class="admin-toolbar">
-        <h2>אירועים ותרגילים</h2>
-        <button class="abtn" onclick="toggleNewEventForm()">+ אירוע חדש</button>
-      </div>
-
-      <!-- New event form -->
-      <div class="new-ev-form" id="new-ev-form">
-        <div class="nef-title">יצירת אירוע חדש</div>
-        <div class="nef-grid">
-          <div>
-            <label class="nef-label">שם האירוע</label>
-            <input class="nef-input" placeholder="לדוגמה: תרגיל מרץ 2025">
-          </div>
-          <div>
-            <label class="nef-label">תאריך ושעה</label>
-            <input class="nef-input" type="datetime-local">
-          </div>
-          <div>
-            <label class="nef-label">מיקום</label>
-            <input class="nef-input" placeholder="כתובת או תיאור המיקום">
-          </div>
-          <div>
-            <label class="nef-label">סוג אירוע</label>
-            <select class="nef-input">
-              <option>תרגיל</option>
-              <option>הכשרה</option>
-              <option>אירוע ממשי</option>
-              <option>כנס</option>
-            </select>
-          </div>
-        </div>
-        <div class="nef-full">
-          <label class="nef-label">קבוצות משתתפות</label>
-          <div class="cb-group">
-            <label class="cb-item"><input type="checkbox" checked> קבוצה 1 (מחלצים)</label>
-            <label class="cb-item"><input type="checkbox"> קבוצה 2 (מחלצים)</label>
-            <label class="cb-item"><input type="checkbox"> קבוצה 3 (מחלצים)</label>
-            <label class="cb-item"><input type="checkbox"> חפ"ק (לוגיסטיקה)</label>
-            <label class="cb-item"><input type="checkbox"> אוכלוסייה</label>
-          </div>
-        </div>
-        <div class="nef-grid">
-          <div>
-            <label class="nef-label">מספר רכבים</label>
-            <input class="nef-input" type="number" placeholder="0" min="0">
-          </div>
-          <div>
-            <label class="nef-label">ציוד (נגרר, תאורה, קאב)</label>
-            <input class="nef-input" placeholder="נגרר א, נגרר ב, תאורה...">
-          </div>
-        </div>
-        <div class="nef-footer">
-          <button class="abtn" onclick="addEvent()">שמור אירוע</button>
-          <button class="abtn abtn-ghost" onclick="toggleNewEventForm()">ביטול</button>
-        </div>
-      </div>
-
-      <!-- Event list -->
-      <div class="ev-list" id="ev-list">
-
-        <!-- Event 1: Active / Planning -->
-        <div class="ev-card ev-active">
-          <div class="ev-top">
-            <div>
-              <div class="ev-title">תרגיל מרץ 2025</div>
-              <div class="ev-date">20 במרץ 2025 · 19:00 · רעננה</div>
-            </div>
-            <span class="ev-badge eb-plan">בתכנון</span>
-          </div>
-          <div class="ev-stats">
-            <div class="ev-stat"><strong>28</strong> זמינים</div>
-            <div class="ev-stat"><strong>—</strong> רכבים</div>
-            <div class="ev-stat"><strong>0</strong> צוותות</div>
-          </div>
-          <div class="ev-chips">
-            <span class="chip chip-r">קבוצה 1</span>
-            <span class="chip chip-r">קבוצה 3</span>
-            <span class="chip chip-c">אוכלוסייה</span>
-          </div>
-          <div class="ev-actions">
-            <button class="ev-btn" onclick="openModal('attendance')">ניהול נוכחות</button>
-            <button class="ev-btn ev-btn-ghost" onclick="openModal('teams')">בנה צוותות</button>
-            <button class="ev-btn ev-btn-ghost" onclick="openModal('equip-ev')">ציוד לאירוע</button>
-          </div>
-        </div>
-
-        <!-- Event 2: Done -->
-        <div class="ev-card">
-          <div class="ev-top">
-            <div>
-              <div class="ev-title">תרגיל ינואר 2025</div>
-              <div class="ev-date">15 בינואר 2025 · 08:00 · רעננה</div>
-            </div>
-            <span class="ev-badge eb-done">הסתיים</span>
-          </div>
-          <div class="ev-stats">
-            <div class="ev-stat"><strong>34</strong> משתתפים</div>
-            <div class="ev-stat"><strong>8</strong> רכבים</div>
-            <div class="ev-stat"><strong>6</strong> צוותות</div>
-            <div class="ev-stat"><strong>3</strong> נגררים</div>
-          </div>
-          <div class="ev-chips">
-            <span class="chip chip-r">קבוצה 1</span>
-            <span class="chip chip-r">קבוצה 2</span>
-            <span class="chip chip-l">חפ"ק</span>
-          </div>
-        </div>
-
-        <!-- Event 3: Done -->
-        <div class="ev-card">
-          <div class="ev-top">
-            <div>
-              <div class="ev-title">הכשרה מתקדמת — נגרר</div>
-              <div class="ev-date">10 בנובמבר 2024 · 16:00 · חניון העירייה</div>
-            </div>
-            <span class="ev-badge eb-done">הסתיים</span>
-          </div>
-          <div class="ev-stats">
-            <div class="ev-stat"><strong>22</strong> משתתפים</div>
-            <div class="ev-stat"><strong>4</strong> רכבים</div>
-            <div class="ev-stat"><strong>2</strong> נגררים</div>
-          </div>
-          <div class="ev-chips">
-            <span class="chip chip-r">קבוצה 2</span>
-            <span class="chip chip-r">קבוצה 3</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: MEMBERS -->
-    <div class="asec" id="at-members">
-      <div class="admin-toolbar">
-        <h2>כוח אדם — 48 חברים</h2>
-        <button class="abtn" onclick="openModal('add-member')">+ הוסף חבר</button>
-      </div>
-      <div class="filters">
-        <input class="finput" placeholder="🔍  חיפוש לפי שם..." style="min-width:200px" oninput="filterMembers(this.value)">
-        <select class="fsel" onchange="filterMembers()">
-          <option value="">כל המחלקות</option>
-          <option>מחלצים · קבוצה 1</option>
-          <option>מחלצים · קבוצה 2</option>
-          <option>מחלצים · קבוצה 3</option>
-          <option>חפ"ק</option>
-          <option>אוכלוסייה</option>
-        </select>
-        <select class="fsel">
-          <option value="">כל הדרגות</option>
-          <option>מפקד היחידה</option>
-          <option>סגן מפקד היחידה</option>
-          <option>מפקד</option>
-          <option>מפקד צוות</option>
-          <option>רגיל</option>
-        </select>
-        <select class="fsel">
-          <option value="">כל הסטטוסים</option>
-          <option>פעיל</option>
-          <option>לא פעיל</option>
-        </select>
-      </div>
-      <div class="mtable-wrap">
-        <table class="mtable">
-          <thead>
-            <tr>
-              <th style="width:18%">שם</th>
-              <th style="width:20%">מחלקה</th>
-              <th style="width:18%">דרגה</th>
-              <th style="width:16%">טלפון</th>
-              <th style="width:18%">אימייל</th>
-              <th style="width:6%">סטטוס</th>
-              <th style="width:4%"></th>
-            </tr>
-          </thead>
-          <tbody id="members-tbody">
-            <tr>
-              <td style="font-weight:700">יוסי כהן</td>
-              <td><span class="dbg">מחלצים · קבוצה 1</span></td>
-              <td><span class="rbg r-cmd">מפקד היחידה</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">054-123-4567</td>
-              <td style="color:var(--tx3);font-size:12px">yossi@example.com</td>
-              <td><span class="sbg s-on">פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700">מירי לוי</td>
-              <td><span class="dbg">חפ"ק</span></td>
-              <td><span class="rbg r-dep">סגן מפקד</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">052-987-6543</td>
-              <td style="color:var(--tx3);font-size:12px">miri@example.com</td>
-              <td><span class="sbg s-on">פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700">אלון שמש</td>
-              <td><span class="dbg">מחלצים · קבוצה 2</span></td>
-              <td><span class="rbg r-tm">מפקד צוות</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">050-112-2334</td>
-              <td style="color:var(--tx3);font-size:12px">alon@example.com</td>
-              <td><span class="sbg s-on">פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700">רונית אברהם</td>
-              <td><span class="dbg">אוכלוסייה</span></td>
-              <td><span class="rbg r-rg">רגיל</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">053-556-6778</td>
-              <td style="color:var(--tx3);font-size:12px">ronit@example.com</td>
-              <td><span class="sbg s-off">לא פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700">דוד גרין</td>
-              <td><span class="dbg">מחלצים · קבוצה 3</span></td>
-              <td><span class="rbg r-rg">רגיל</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">058-334-4556</td>
-              <td style="color:var(--tx3);font-size:12px">david@example.com</td>
-              <td><span class="sbg s-on">פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700">נועה ברק</td>
-              <td><span class="dbg">מחלצים · קבוצה 1</span></td>
-              <td><span class="rbg r-tm">מפקד צוות</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">054-778-9900</td>
-              <td style="color:var(--tx3);font-size:12px">noa@example.com</td>
-              <td><span class="sbg s-on">פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700">אמיר דוד</td>
-              <td><span class="dbg">חפ"ק</span></td>
-              <td><span class="rbg r-rg">רגיל</span></td>
-              <td style="color:var(--tx3);direction:ltr;text-align:right">052-445-5667</td>
-              <td style="color:var(--tx3);font-size:12px">amir@example.com</td>
-              <td><span class="sbg s-on">פעיל</span></td>
-              <td><button class="ibtn" title="ערוך">✏</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="font-size:12px;color:var(--tx3);margin-top:12px;text-align:center">
-        מציג 7 מתוך 48 חברים · <span style="color:var(--or);cursor:pointer">טען הכל</span>
-      </p>
-    </div>
-
-    <!-- TAB: EQUIPMENT -->
-    <div class="asec" id="at-equip">
-      <div class="admin-toolbar">
-        <h2>ניהול ציוד</h2>
-        <button class="abtn">+ הוסף פריט</button>
-      </div>
-      <div style="margin-bottom:20px">
-        <div style="font-size:12px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">קבוצה 1</div>
-        <div class="eq-grid">
-          <div class="eq-card">
-            <div class="eq-top">
-              <div class="eq-name">נגרר א׳</div>
-              <span class="eq-grp">קבוצה 1</span>
-            </div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: ינואר 2025</div>
-          </div>
-          <div class="eq-card">
-            <div class="eq-top">
-              <div class="eq-name">נגרר ב׳</div>
-              <span class="eq-grp">קבוצה 1</span>
-            </div>
-            <div class="eq-status"><span class="sdot dot-a"></span>בתחזוקה</div>
-            <div class="eq-last">צפוי לחזור: 01/04/2025</div>
-          </div>
-          <div class="eq-card">
-            <div class="eq-top">
-              <div class="eq-name">תאורה</div>
-              <span class="eq-grp">קבוצה 1</span>
-            </div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: ינואר 2025</div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-bottom:20px">
-        <div style="font-size:12px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">קבוצה 2</div>
-        <div class="eq-grid">
-          <div class="eq-card">
-            <div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-grp">קבוצה 2</span></div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: דצמבר 2024</div>
-          </div>
-          <div class="eq-card">
-            <div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-grp">קבוצה 2</span></div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: נובמבר 2024</div>
-          </div>
-          <div class="eq-card">
-            <div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-grp">קבוצה 2</span></div>
-            <div class="eq-status"><span class="sdot dot-r"></span>בשימוש באירוע</div>
-            <div class="eq-last">שימוש אחרון: מרץ 2025</div>
-            <div class="eq-event">↳ תרגיל מרץ 2025</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">קבוצה 3</div>
-        <div class="eq-grid">
-          <div class="eq-card">
-            <div class="eq-top"><div class="eq-name">נגרר א׳</div><span class="eq-grp">קבוצה 3</span></div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: ספטמבר 2024</div>
-          </div>
-          <div class="eq-card">
-            <div class="eq-top"><div class="eq-name">נגרר ב׳</div><span class="eq-grp">קבוצה 3</span></div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: אוקטובר 2024</div>
-          </div>
-          <div class="eq-card">
-            <div class="eq-top"><div class="eq-name">תאורה</div><span class="eq-grp">קבוצה 3</span></div>
-            <div class="eq-status"><span class="sdot dot-g"></span>זמין</div>
-            <div class="eq-last">שימוש אחרון: ספטמבר 2024</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /admin-body -->
-</div><!-- /page-admin -->
-
-<!-- ====== MODALS ====== -->
-
-<!-- Attendance Modal -->
-<div class="modal-overlay" id="modal-attendance" onclick="closeModalOnBg(event,'modal-attendance')">
+<!-- ── MODAL: ATTENDANCE ── -->
+<div class="overlay" id="modal-att" onclick="bgClose(event,'modal-att')">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">ניהול נוכחות — תרגיל מרץ 2025</div>
-      <button class="modal-close" onclick="closeModal('modal-attendance')">×</button>
-    </div>
-    <div class="modal-tabs">
-      <button class="mtab active" onclick="showMTab('att-list','modal-attendance',this)">רשימת משתתפים</button>
-      <button class="mtab" onclick="showMTab('att-avail','modal-attendance',this)">זמינות מוקדמת</button>
-    </div>
-
-    <div class="msec active" id="att-list">
-      <div class="att-stats">
-        <div class="att-stat"><div class="att-stat-n">28</div><div class="att-stat-l">זמינים</div></div>
-        <div class="att-stat"><div class="att-stat-n" style="color:#acd36a">19</div><div class="att-stat-l">נוכחים</div></div>
-        <div class="att-stat"><div class="att-stat-n" style="color:#EF9F27">9</div><div class="att-stat-l">נעדרים</div></div>
-        <div class="att-stat"><div class="att-stat-n">3</div><div class="att-stat-l">לא ידוע</div></div>
+    <div class="mhdr"><div class="mhdr-t">ניהול נוכחות — תרגיל מרץ 2025</div><button class="mclose" onclick="closeM('modal-att')">×</button></div>
+    <div class="mbody">
+      <div class="mtabs">
+        <button class="mtab active" onclick="showMTab('att-now','modal-att',this)">נוכחות</button>
+        <button class="mtab" onclick="showMTab('att-avail','modal-att',this)">זמינות מוקדמת</button>
       </div>
-      <div class="att-list">
-        <div class="att-item">
-          <div class="att-av">י.כ</div>
-          <div style="flex:1"><div class="att-name">יוסי כהן</div><div class="att-role">מפקד היחידה · קבוצה 1</div></div>
-          <div class="att-dept">מחלצים</div>
-          <div class="att-toggle">
-            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
-            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
-          </div>
+      <div class="msec active" id="att-now">
+        <div class="att-stats">
+          <div class="att-st"><div class="att-st-n">28</div><div class="att-st-l">זמינים</div></div>
+          <div class="att-st"><div class="att-st-n" style="color:#2e7d32">19</div><div class="att-st-l">נוכחים</div></div>
+          <div class="att-st"><div class="att-st-n" style="color:#e65100">6</div><div class="att-st-l">נעדרים</div></div>
+          <div class="att-st"><div class="att-st-n" style="color:var(--tx3)">3</div><div class="att-st-l">לא ידוע</div></div>
         </div>
-        <div class="att-item">
-          <div class="att-av">מ.ל</div>
-          <div style="flex:1"><div class="att-name">מירי לוי</div><div class="att-role">סגן מפקד · חפ"ק</div></div>
-          <div class="att-dept">חפ"ק</div>
-          <div class="att-toggle">
-            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
-            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
-          </div>
-        </div>
-        <div class="att-item">
-          <div class="att-av">א.ש</div>
-          <div style="flex:1"><div class="att-name">אלון שמש</div><div class="att-role">מפקד צוות · קבוצה 2</div></div>
-          <div class="att-dept">מחלצים</div>
-          <div class="att-toggle">
-            <button class="att-btn" onclick="toggleAtt(this,'present')">נוכח</button>
-            <button class="att-btn absent" onclick="toggleAtt(this,'absent')">נעדר ✗</button>
-          </div>
-        </div>
-        <div class="att-item">
-          <div class="att-av">ר.א</div>
-          <div style="flex:1"><div class="att-name">רונית אברהם</div><div class="att-role">רגיל · אוכלוסייה</div></div>
-          <div class="att-dept">אוכלוסייה</div>
-          <div class="att-toggle">
-            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
-            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
-          </div>
-        </div>
-        <div class="att-item">
-          <div class="att-av">ד.ג</div>
-          <div style="flex:1"><div class="att-name">דוד גרין</div><div class="att-role">רגיל · קבוצה 3</div></div>
-          <div class="att-dept">מחלצים</div>
-          <div class="att-toggle">
-            <button class="att-btn" onclick="toggleAtt(this,'present')">נוכח</button>
-            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
-          </div>
-        </div>
-        <div class="att-item">
-          <div class="att-av">נ.ב</div>
-          <div style="flex:1"><div class="att-name">נועה ברק</div><div class="att-role">מפקד צוות · קבוצה 1</div></div>
-          <div class="att-dept">מחלצים</div>
-          <div class="att-toggle">
-            <button class="att-btn present" onclick="toggleAtt(this,'present')">נוכח ✓</button>
-            <button class="att-btn" onclick="toggleAtt(this,'absent')">נעדר</button>
-          </div>
+        <div class="att-list" id="att-list-el"></div>
+        <div style="display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)">
+          <button class="btn btn-p btn-sm">שמור נוכחות</button>
+          <button class="btn btn-g btn-sm">+ הוסף משתתף</button>
         </div>
       </div>
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--bd);display:flex;gap:10px;align-items:center">
-        <button class="abtn" style="font-size:13px">שמור נוכחות</button>
-        <button class="abtn abtn-ghost" style="font-size:13px">+ הוסף משתתף</button>
-        <span style="font-size:12px;color:var(--tx3);margin-right:auto">עדכון אחרון: עכשיו</span>
-      </div>
-    </div>
-
-    <div class="msec" id="att-avail">
-      <p style="font-size:13px;color:var(--tx2);margin-bottom:16px">רשימת המתנדבים שדיווחו על זמינות מוקדמת לאירוע זה</p>
-      <div class="att-list">
-        <div class="att-item">
-          <div class="att-av">י.כ</div>
-          <div style="flex:1"><div class="att-name">יוסי כהן</div><div class="att-role">קבוצה 1</div></div>
-          <span class="sbg s-on">זמין</span>
-        </div>
-        <div class="att-item">
-          <div class="att-av">מ.ל</div>
-          <div style="flex:1"><div class="att-name">מירי לוי</div><div class="att-role">חפ"ק</div></div>
-          <span class="sbg s-on">זמין</span>
-        </div>
-        <div class="att-item">
-          <div class="att-av">א.ש</div>
-          <div style="flex:1"><div class="att-name">אלון שמש</div><div class="att-role">קבוצה 2</div></div>
-          <span class="sbg s-off">לא זמין</span>
+      <div class="msec" id="att-avail">
+        <p style="font-size:13px;color:var(--tx2);margin-bottom:14px">מתנדבים שדיווחו על זמינות לאירוע זה</p>
+        <div class="att-list">
+          <div class="att-row"><div class="att-av">י.כ</div><div style="flex:1"><div class="att-name">יוסי כהן</div><div class="att-role">מפקד היחידה</div></div><span class="sbg s-on">זמין</span></div>
+          <div class="att-row"><div class="att-av">מ.ל</div><div style="flex:1"><div class="att-name">מירי לוי</div><div class="att-role">סגן מפקד</div></div><span class="sbg s-on">זמין</span></div>
+          <div class="att-row"><div class="att-av">א.ש</div><div style="flex:1"><div class="att-name">אלון שמש</div><div class="att-role">מפקד צוות</div></div><span class="sbg s-off">לא זמין</span></div>
+          <div class="att-row"><div class="att-av">נ.ב</div><div style="flex:1"><div class="att-name">נועה ברק</div><div class="att-role">מפקד צוות</div></div><span class="sbg s-on">זמין</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Teams Modal -->
-<div class="modal-overlay" id="modal-teams" onclick="closeModalOnBg(event,'modal-teams')">
+<!-- ── MODAL: TEAMS ── -->
+<div class="overlay" id="modal-teams" onclick="bgClose(event,'modal-teams')">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">בניית צוותות — תרגיל מרץ 2025</div>
-      <button class="modal-close" onclick="closeModal('modal-teams')">×</button>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div style="font-size:13px;color:var(--tx2)">גרור חברים בין הצוותות או לחץ + להוספה</div>
-      <button class="abtn" style="font-size:12px">+ צוות חדש</button>
-    </div>
-    <div class="teams-area">
-      <div class="team-card">
-        <div class="team-card-header">
-          <div class="team-card-title">צוות א׳</div>
-          <span style="font-size:11px;color:var(--tx3)">3 חברים</span>
+    <div class="mhdr"><div class="mhdr-t">בניית צוותות — תרגיל מרץ 2025</div><button class="mclose" onclick="closeM('modal-teams')">×</button></div>
+    <div class="mbody">
+      <p style="font-size:13px;color:var(--tx2);margin-bottom:16px">גרור חברים מהמאגר לתוך הצוותות. לחץ × להסרה.</p>
+      <div class="teams-layout">
+        <div>
+          <div class="pool-box">
+            <div class="pool-title">מאגר נוכחים</div>
+            <div class="pool-list" id="pool" ondragover="dOver(event)" ondrop="dDrop(event,'pool')"></div>
+          </div>
+          <button class="btn btn-g btn-sm" style="margin-top:10px;width:100%" onclick="addTeam()">+ הוסף צוות</button>
         </div>
-        <div class="team-members">
-          <div class="team-member">
-            <div class="tm-av">י.כ</div>
-            <span>יוסי כהן</span>
-            <span class="tm-role">מפקד צוות</span>
-          </div>
-          <div class="team-member">
-            <div class="tm-av">נ.ב</div>
-            <span>נועה ברק</span>
-            <span class="tm-role">מחלץ</span>
-          </div>
-          <div class="team-member">
-            <div class="tm-av">ד.ג</div>
-            <span>דוד גרין</span>
-            <span class="tm-role">מחלץ</span>
-          </div>
-        </div>
-        <button class="add-member-btn">+ הוסף חבר לצוות</button>
+        <div class="team-cols" id="team-cols"></div>
       </div>
-      <div class="team-card">
-        <div class="team-card-header">
-          <div class="team-card-title">צוות ב׳</div>
-          <span style="font-size:11px;color:var(--tx3)">2 חברים</span>
-        </div>
-        <div class="team-members">
-          <div class="team-member">
-            <div class="tm-av">מ.ל</div>
-            <span>מירי לוי</span>
-            <span class="tm-role">מפקד צוות</span>
-          </div>
-          <div class="team-member">
-            <div class="tm-av">ר.א</div>
-            <span>רונית אברהם</span>
-            <span class="tm-role">לוגיסטיקה</span>
-          </div>
-        </div>
-        <button class="add-member-btn">+ הוסף חבר לצוות</button>
+      <div style="display:flex;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--bd)">
+        <button class="btn btn-p btn-sm">שמור צוותות</button>
+        <button class="btn btn-g btn-sm" onclick="closeM('modal-teams')">סגור</button>
       </div>
-    </div>
-    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bd);display:flex;gap:10px">
-      <button class="abtn">שמור צוותות</button>
-      <button class="abtn abtn-ghost" onclick="closeModal('modal-teams')">סגור</button>
     </div>
   </div>
 </div>
 
-<!-- Equipment for event Modal -->
-<div class="modal-overlay" id="modal-equip-ev" onclick="closeModalOnBg(event,'modal-equip-ev')">
-  <div class="modal" style="max-width:560px">
-    <div class="modal-header">
-      <div class="modal-title">ציוד לאירוע — תרגיל מרץ 2025</div>
-      <button class="modal-close" onclick="closeModal('modal-equip-ev')">×</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="font-size:12px;color:var(--tx3);margin-bottom:4px">בחר ציוד שישמש באירוע זה</div>
-      <div class="att-item" style="justify-content:space-between">
-        <span style="font-weight:700">נגרר א׳ — קבוצה 1</span>
-        <span class="sbg s-on">זמין</span>
-        <label class="cb-item"><input type="checkbox" checked> שייך לאירוע</label>
+<!-- ── MODAL: EQUIP for event ── -->
+<div class="overlay" id="modal-equip-ev" onclick="bgClose(event,'modal-equip-ev')">
+  <div class="modal modal-sm">
+    <div class="mhdr"><div class="mhdr-t">ציוד לאירוע — מרץ 2025</div><button class="mclose" onclick="closeM('modal-equip-ev')">×</button></div>
+    <div class="mbody">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="att-row" style="justify-content:space-between"><span style="font-weight:700">נגרר א׳ — קבוצה 1</span><span class="sbg s-on">זמין</span><label class="cb-item"><input type="checkbox" checked> שייך</label></div>
+        <div class="att-row" style="justify-content:space-between;opacity:.5"><span style="font-weight:700">נגרר ב׳ — קבוצה 1</span><span class="sbg s-off">בתחזוקה</span><label class="cb-item"><input type="checkbox" disabled> לא זמין</label></div>
+        <div class="att-row" style="justify-content:space-between"><span style="font-weight:700">תאורה — קבוצה 1</span><span class="sbg s-on">זמין</span><label class="cb-item"><input type="checkbox"> שייך</label></div>
+        <div class="att-row" style="justify-content:space-between"><span style="font-weight:700">נגרר א׳ — קבוצה 3</span><span class="sbg s-on">זמין</span><label class="cb-item"><input type="checkbox"> שייך</label></div>
       </div>
-      <div class="att-item" style="justify-content:space-between">
-        <span style="font-weight:700">נגרר ב׳ — קבוצה 1</span>
-        <span class="sbg s-off">בתחזוקה</span>
-        <label class="cb-item"><input type="checkbox" disabled> לא זמין</label>
+      <div class="mfg" style="margin-top:14px"><label>מספר רכבים</label><input type="number" min="0" value="4" style="max-width:120px"></div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-p btn-sm">שמור</button>
+        <button class="btn btn-g btn-sm" onclick="closeM('modal-equip-ev')">סגור</button>
       </div>
-      <div class="att-item" style="justify-content:space-between">
-        <span style="font-weight:700">תאורה — קבוצה 2</span>
-        <span class="sbg s-on">זמין</span>
-        <label class="cb-item"><input type="checkbox"> שייך לאירוע</label>
-      </div>
-      <div class="att-item" style="justify-content:space-between">
-        <span style="font-weight:700">נגרר א׳ — קבוצה 3</span>
-        <span class="sbg s-on">זמין</span>
-        <label class="cb-item"><input type="checkbox"> שייך לאירוע</label>
-      </div>
-    </div>
-    <div style="margin-top:8px">
-      <label class="nef-label" style="margin-top:14px;display:block">מספר רכבים</label>
-      <input class="nef-input" type="number" placeholder="0" value="4" style="max-width:120px">
-    </div>
-    <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--bd);display:flex;gap:10px">
-      <button class="abtn">שמור</button>
-      <button class="abtn abtn-ghost" onclick="closeModal('modal-equip-ev')">סגור</button>
     </div>
   </div>
 </div>
 
-<!-- Add Member Modal -->
-<div class="modal-overlay" id="modal-add-member" onclick="closeModalOnBg(event,'modal-add-member')">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-header">
-      <div class="modal-title">הוספת חבר חדש</div>
-      <button class="modal-close" onclick="closeModal('modal-add-member')">×</button>
-    </div>
-    <div class="modal-form-grid">
-      <div class="mfg"><label class="mfl">שם פרטי</label><input class="mfi" placeholder="שם פרטי"></div>
-      <div class="mfg"><label class="mfl">שם משפחה</label><input class="mfi" placeholder="שם משפחה"></div>
-      <div class="mfg"><label class="mfl">טלפון</label><input class="mfi" type="tel" placeholder="05X-XXX-XXXX" style="direction:ltr"></div>
-      <div class="mfg"><label class="mfl">אימייל</label><input class="mfi" type="email" placeholder="email@example.com" style="direction:ltr"></div>
-      <div class="mfg">
-        <label class="mfl">מחלקה</label>
-        <select class="mfi">
-          <option>מחלצים · קבוצה 1</option>
-          <option>מחלצים · קבוצה 2</option>
-          <option>מחלצים · קבוצה 3</option>
-          <option>חפ"ק</option>
-          <option>אוכלוסייה</option>
-        </select>
+<!-- ── MODAL: ADD MEMBER ── -->
+<div class="overlay" id="modal-add" onclick="bgClose(event,'modal-add')">
+  <div class="modal modal-sm">
+    <div class="mhdr"><div class="mhdr-t">הוספת חבר חדש</div><button class="mclose" onclick="closeM('modal-add')">×</button></div>
+    <div class="mbody">
+      <div class="mfg-grid">
+        <div class="mfg"><label>שם פרטי</label><input placeholder="שם פרטי"></div>
+        <div class="mfg"><label>שם משפחה</label><input placeholder="שם משפחה"></div>
+        <div class="mfg"><label>טלפון</label><input type="tel" placeholder="05X-XXX-XXXX" style="direction:ltr"></div>
+        <div class="mfg"><label>אימייל</label><input type="email" placeholder="email@example.com" style="direction:ltr"></div>
+        <div class="mfg"><label>מחלקה</label><select><option>מחלצים · קבוצה 1</option><option>מחלצים · קבוצה 2</option><option>מחלצים · קבוצה 3</option><option>חפ"ק</option><option>אוכלוסייה</option></select></div>
+        <div class="mfg"><label>דרגה</label><select><option>רגיל</option><option>מפקד צוות</option><option>מפקד</option><option>סגן מפקד היחידה</option><option>מפקד היחידה</option></select></div>
       </div>
-      <div class="mfg">
-        <label class="mfl">דרגה</label>
-        <select class="mfi">
-          <option>רגיל</option>
-          <option>מפקד צוות</option>
-          <option>מפקד</option>
-          <option>סגן מפקד היחידה</option>
-          <option>מפקד היחידה</option>
-        </select>
+      <div class="mfg"><label>הערות</label><textarea rows="2" placeholder="הערות נוספות..."></textarea></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-p btn-sm">הוסף חבר</button>
+        <button class="btn btn-g btn-sm" onclick="closeM('modal-add')">ביטול</button>
       </div>
-    </div>
-    <div class="mfg">
-      <label class="mfl">הערות</label>
-      <textarea class="mfi" rows="3" placeholder="הערות נוספות..."></textarea>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:4px">
-      <button class="abtn">הוסף חבר</button>
-      <button class="abtn abtn-ghost" onclick="closeModal('modal-add-member')">ביטול</button>
     </div>
   </div>
 </div>
 
-<!-- ====== SCRIPTS ====== -->
+<!-- ── MODAL: CSV ── -->
+<div class="overlay" id="modal-csv" onclick="bgClose(event,'modal-csv')">
+  <div class="modal modal-sm">
+    <div class="mhdr"><div class="mhdr-t">ייבוא חברים מ-CSV</div><button class="mclose" onclick="closeM('modal-csv')">×</button></div>
+    <div class="mbody">
+      <div class="csv-zone" id="csv-zone" onclick="document.getElementById('csv-input').click()"
+           ondragover="csvOver(event)" ondragleave="csvLeave()" ondrop="csvDrop(event)">
+        <div class="csv-icon">📄</div>
+        <div class="csv-title">גרור קובץ CSV לכאן</div>
+        <div class="csv-sub">או לחץ לבחירת קובץ</div>
+        <span class="csv-tpl" onclick="event.stopPropagation();dlTpl()">📥 הורד תבנית CSV</span>
+        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCSV(event)">
+      </div>
+      <div class="csv-preview" id="csv-preview">
+        <div class="csv-ok" id="csv-ok-msg"></div>
+        <div id="csv-content"></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:var(--bg2);border-radius:var(--r);font-size:12px;color:var(--tx2)">
+        <strong>עמודות נדרשות:</strong> שם פרטי, שם משפחה, טלפון, אימייל, מחלקה, דרגה
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-p btn-sm" id="csv-import-btn" style="display:none" onclick="doImport()">ייבא חברים</button>
+        <button class="btn btn-g btn-sm" onclick="closeM('modal-csv')">סגור</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Page navigation
-  function showPage(name) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    window.scrollTo(0, 0);
-    const map = { home: 0, admin: 1 };
-    if (map[name] !== undefined) {
-      document.querySelectorAll('.nav-link')[map[name]].classList.add('active');
-    }
-  }
+// ── Pages ──
+function showPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nl').forEach(l=>l.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  window.scrollTo(0,0);
+  const map={home:0,admin:7};
+  if(map[n]!==undefined) document.querySelectorAll('.nl')[map[n]].classList.add('active');
+}
+// ── Admin tabs ──
+function showAdminTab(n,el){
+  document.querySelectorAll('.asec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('at-'+n).classList.add('active'); el.classList.add('active');
+}
+// ── Event form ──
+function toggleNEF(){const f=document.getElementById('nef');f.classList.toggle('open');if(f.classList.contains('open'))f.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function saveEvent(){alert('האירוע נשמר! (בגרסה הסופית ב-Firebase)');document.getElementById('nef').classList.remove('open');}
+// ── Material ──
+function toggleMat(el){if(el.classList.contains('mat-dis'))return;el.classList.toggle('mat-sel');el.querySelector('input').checked=el.classList.contains('mat-sel');}
+// ── Modals ──
+function openM(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';if(id==='modal-att')buildAtt();if(id==='modal-teams')buildTeams();}
+function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+function bgClose(e,id){if(e.target===document.getElementById(id))closeM(id);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(o=>{o.classList.remove('open');document.body.style.overflow='';});});
+function showMTab(sec,modal,el){const m=document.getElementById(modal);m.querySelectorAll('.msec').forEach(s=>s.classList.remove('active'));m.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));document.getElementById(sec).classList.add('active');el.classList.add('active');}
 
-  // Admin tabs
-  function showAdminTab(name, el) {
-    document.querySelectorAll('.asec').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
-    document.getElementById('at-' + name).classList.add('active');
-    el.classList.add('active');
-  }
+// ── Attendance ──
+const MEMBERS=[
+  {av:'י.כ',name:'יוסי כהן',role:'מפקד היחידה',dept:'קבוצה 1',st:'present'},
+  {av:'מ.ל',name:'מירי לוי',role:'סגן מפקד',dept:'חפ"ק',st:'present'},
+  {av:'א.ש',name:'אלון שמש',role:'מפקד צוות',dept:'קבוצה 2',st:'absent'},
+  {av:'ר.א',name:'רונית אברהם',role:'רגיל',dept:'אוכלוסייה',st:'present'},
+  {av:'ד.ג',name:'דוד גרין',role:'רגיל',dept:'קבוצה 3',st:'unknown'},
+  {av:'נ.ב',name:'נועה ברק',role:'מפקד צוות',dept:'קבוצה 1',st:'present'},
+  {av:'א.ד',name:'אמיר דוד',role:'רגיל',dept:'חפ"ק',st:'unknown'},
+];
+function buildAtt(){
+  document.getElementById('att-list-el').innerHTML=MEMBERS.map((m,i)=>`
+    <div class="att-row">
+      <div class="att-av">${m.av}</div>
+      <div style="flex:1"><div class="att-name">${m.name}</div><div class="att-role">${m.role}</div></div>
+      <div class="att-dept">${m.dept}</div>
+      <div class="tgl-wrap">
+        <button class="tgl ${m.st==='present'?'on':''}" onclick="setAtt(${i},'present',this)">נוכח ✓</button>
+        <button class="tgl ${m.st==='absent'?'off':''}" onclick="setAtt(${i},'absent',this)">נעדר ✗</button>
+      </div>
+    </div>`).join('');
+}
+function setAtt(i,st,btn){MEMBERS[i].st=st;const w=btn.closest('.tgl-wrap');w.querySelectorAll('.tgl').forEach(b=>b.classList.remove('on','off'));btn.classList.add(st==='present'?'on':'off');}
 
-  // New event form
-  function toggleNewEventForm() {
-    const f = document.getElementById('new-ev-form');
-    f.classList.toggle('visible');
-  }
+// ── DRAG & DROP TEAMS ──
+let dragData=null, teams=[], pool=[];
+const HEB=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ז׳'];
 
-  function addEvent() {
-    alert('האירוע נשמר! (בגרסה הסופית יישמר ב-Firebase)');
-    toggleNewEventForm();
-  }
+function buildTeams(){
+  teams=[{id:'t0',name:'צוות א׳',members:[]},{id:'t1',name:'צוות ב׳',members:[]}];
+  pool=[...MEMBERS];
+  renderTeams();
+}
+function renderTeams(){
+  // Pool
+  document.getElementById('pool').innerHTML=pool.map(m=>chip(m,'pool',null)).join('')||'<div style="font-size:12px;color:var(--tx3);padding:8px;text-align:center">מאגר ריק</div>';
+  // Teams
+  document.getElementById('team-cols').innerHTML=teams.map(t=>`
+    <div class="team-card">
+      <div class="team-hdr"><div class="team-name">${t.name}</div><span class="team-cnt">${t.members.length} חברים</span></div>
+      <div class="team-drop" id="${t.id}" ondragover="dOver(event)" ondragleave="dLeave(event)" ondrop="dDrop(event,'${t.id}')">
+        ${t.members.map(m=>chip(m,t.id,t.id)).join('')}
+        ${!t.members.length?'<div style="font-size:12px;color:var(--tx3);text-align:center;padding:6px">גרור לכאן</div>':''}
+      </div>
+    </div>`).join('');
+}
+function chip(m,from,teamId){
+  const rm=teamId?`<button class="dc-rm" onclick="rmFromTeam('${m.name}','${teamId}')">×</button>`:'';
+  return `<div class="drag-chip ${teamId?'in-team':''}" draggable="true"
+    ondragstart="dStart(event,'${m.name}','${from}')" ondragend="dEnd(event)">
+    <span class="dc-handle">⠿</span><div class="dc-av">${m.av}</div>
+    <div style="flex:1"><div class="dc-name">${m.name}</div><div class="dc-role">${m.role}</div></div>${rm}</div>`;
+}
+function dStart(e,name,from){dragData={name,from};e.target.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+function dEnd(e){e.target.classList.remove('dragging');}
+function dOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');e.dataTransfer.dropEffect='move';}
+function dLeave(e){e.currentTarget.classList.remove('drag-over');}
+function dDrop(e,tid){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(!dragData||dragData.from===tid)return;
+  const {name,from}=dragData;
+  let member;
+  if(from==='pool'){const i=pool.findIndex(m=>m.name===name);if(i<0)return;[member]=pool.splice(i,1);}
+  else{const t=teams.find(t=>t.id===from);if(!t)return;const i=t.members.findIndex(m=>m.name===name);if(i<0)return;[member]=t.members.splice(i,1);}
+  if(tid==='pool') pool.push(member);
+  else{const t=teams.find(t=>t.id===tid);if(t&&!t.members.find(m=>m.name===name))t.members.push(member);}
+  dragData=null; renderTeams();
+}
+function rmFromTeam(name,tid){
+  const t=teams.find(t=>t.id===tid);if(!t)return;
+  const i=t.members.findIndex(m=>m.name===name);if(i<0)return;
+  const [m]=t.members.splice(i,1); pool.push(m); renderTeams();
+}
+let tc=2;
+function addTeam(){teams.push({id:'t'+tc,name:'צוות '+HEB[tc++],members:[]});renderTeams();}
 
-  // Modals
-  function openModal(name) {
-    document.getElementById('modal-' + name).classList.add('visible');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('visible');
-    document.body.style.overflow = '';
-  }
-
-  function closeModalOnBg(e, id) {
-    if (e.target === document.getElementById(id)) closeModal(id);
-  }
-
-  // Modal tabs
-  function showMTab(secId, modalId, el) {
-    const modal = document.getElementById(modalId);
-    modal.querySelectorAll('.msec').forEach(s => s.classList.remove('active'));
-    modal.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
-    document.getElementById(secId).classList.add('active');
-    el.classList.add('active');
-  }
-
-  // Attendance toggle
-  function toggleAtt(btn, status) {
-    const group = btn.closest('.att-toggle');
-    group.querySelectorAll('.att-btn').forEach(b => {
-      b.classList.remove('present', 'absent');
-      b.textContent = b.textContent.replace(' ✓','').replace(' ✗','');
-    });
-    btn.classList.add(status);
-    if (status === 'present') btn.textContent = 'נוכח ✓';
-    if (status === 'absent') btn.textContent = 'נעדר ✗';
-  }
-
-  // Member filter (basic demo)
-  function filterMembers(val) {
-    // In final version: filter from Firebase
-    console.log('Filtering:', val);
-  }
-
-  // ESC to close modals
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.modal-overlay.visible').forEach(m => {
-        m.classList.remove('visible');
-        document.body.style.overflow = '';
-      });
-    }
-  });
+// ── CSV ──
+let csvRows=[];
+function csvOver(e){e.preventDefault();document.getElementById('csv-zone').classList.add('drag');}
+function csvLeave(){document.getElementById('csv-zone').classList.remove('drag');}
+function csvDrop(e){e.preventDefault();csvLeave();const f=e.dataTransfer.files[0];if(f)readCSV(f);}
+function handleCSV(e){const f=e.target.files[0];if(f)readCSV(f);}
+function readCSV(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    const lines=ev.target.result.split('\n').filter(l=>l.trim());
+    csvRows=lines.slice(1).map(l=>{const c=l.split(',').map(s=>s.trim().replace(/"/g,''));return{first:c[0]||'',last:c[1]||'',phone:c[2]||'',email:c[3]||'',dept:c[4]||'',role:c[5]||''};}).filter(r=>r.first);
+    const p=document.getElementById('csv-preview'); p.classList.add('show');
+    document.getElementById('csv-ok-msg').textContent=`✓ נמצאו ${csvRows.length} חברים`;
+    document.getElementById('csv-content').innerHTML=csvRows.slice(0,5).map(r=>`<div style="padding:3px 0;border-bottom:1px solid var(--bd)">${r.first} ${r.last} · ${r.dept}</div>`).join('')+(csvRows.length>5?`<div style="color:var(--tx3);margin-top:3px">... ו-${csvRows.length-5} נוספים</div>`:'');
+    document.getElementById('csv-import-btn').style.display='inline-flex';
+  };
+  r.readAsText(file,'UTF-8');
+}
+function doImport(){alert(`ייובאו ${csvRows.length} חברים! (בגרסה הסופית ב-Firebase)`);closeM('modal-csv');}
+function dlTpl(){
+  const csv='שם פרטי,שם משפחה,טלפון,אימייל,מחלקה,דרגה\nיוסי,כהן,054-0000000,email@example.com,מחלצים · קבוצה 1,רגיל';
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='template_members.csv';a.click();
+}
 </script>
 </body>
 </html>
